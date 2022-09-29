@@ -1,0 +1,54 @@
+/* animations */
+@keyframes rotate {
+  from{
+      transform: rotate(0deg);
+  }
+  to{
+      transform: rotate(360deg);
+  }
+}
+
+@keyframes iconshake {
+  0%{
+      transform: translateX(-4%);
+  }
+  20%{
+      transform: translateX(4%);
+  }
+  40%{
+      transform: translateX(-4%);
+  }
+  60%{
+      transform: translateX(4%);
+  }
+  80%{
+      transform: translateX(-4%);
+  }
+  100%{
+      transform: translateX(4%);
+  }
+}
+@keyframes bounce {
+  0%{
+      transform: translateY(-8%);
+  }
+  20%{
+      transform: translateY(0%);
+  }
+  40%{
+      transform: translateY(-8%);
+  }
+  60%{
+      transform: translateY(0%);
+  }
+  80%{
+      transform: translateY(-8%);
+  }
+  100%{
+      transform: translateY(0%);
+  }
+}
+
+body{
+    overflow: hidden;
+}

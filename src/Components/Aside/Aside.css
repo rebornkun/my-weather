@@ -1,0 +1,107 @@
+.aside{
+    height: 100vh;
+    width: 14vw;
+    background: var(--back);
+    border-right: 2px solid var(--line-tint);
+    box-shadow: 2px 2px 7px var(--line-tint);
+    position: fixed;
+    z-index: 5;
+}
+
+.aside_container{
+    display: flex;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+}
+
+.aside h1{
+    font-size: 1.3rem;
+    width: 100%;
+    padding: 2.5rem 1rem 2.5rem 2rem;
+    font-weight: 600;
+    background: var(--logo);
+    background-clip: text;
+    color: transparent;
+    cursor: pointer;
+
+}
+
+.navitem_container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 0rem;
+    justify-content: space-between;
+}
+
+.aside ul li{
+    font-size: 0.7rem;
+    padding: 1rem 1rem 1rem 2rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    font-weight: 400;
+    align-items: center;
+    height: 3.5rem;
+    position: relative;
+    color: var(--nom-text);
+    transition: all 0.3 ease;
+}
+.aside ul li i{
+    font-size: 1.2rem;
+    margin-right: 5px;
+    transition: all 0.3 ease;
+}
+.aside ul li span{
+    height: 90%;
+    background: var(--back);
+    width: 0.2rem;
+    position: absolute;
+    right: -0.06rem;
+    display: none;
+    align-items: center;
+    transition: all 0.3 ease;
+}
+.aside ul li span::after{
+    content: '';
+    height: 60%;
+    background: var(--dark-text);
+    width: 0.1rem;
+    position: absolute;
+    right: 0rem;
+    transition: all 0.3 ease;
+}
+
+/* hovers */
+.aside ul li:hover{
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: var(--logo);
+    background-clip: text;
+    color: transparent;
+    transition: all 0.3 ease;
+}
+.aside ul li:hover i{
+    font-size: 1.2rem;
+    margin-right: 5px;
+    background: var(--logo);
+    background-clip: text;
+    color: transparent;
+    animation: rotate 1s linear infinite alternate;
+    transition: all 0.3 ease;
+}
+
+/* active */
+
+.aside ul li.active span{
+    display: flex;
+}
+.aside ul li.active{
+    color: var(--dark-text);
+    box-shadow: 2px 2px 7px var(--line-tint);
+}
+.aside ul li.active i{
+    color: var(--dark-text);
+}

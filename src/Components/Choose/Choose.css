@@ -1,0 +1,83 @@
+.choose{
+    height: 12rem;
+    width: 20%;
+    border-radius: 10px;
+    box-shadow: 2px 2px 7px var(--line-tint);
+    background: var(--weekly-overlay);
+    cursor: pointer;
+    /* animation: iconshake 1s linear alternate infinite; */
+}
+.choose_container{
+    padding: 1rem;
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+}
+.choose .choose_container .name{
+    font-size: 1rem;
+    font-weight: 600;
+    width: 100%;
+    color: var(--dark-text);
+}
+.choose .choose_container .state{
+    font-size: 1rem;
+    font-weight: 600;
+    width: 100%;
+    color: var(--dark-text);
+}
+.choose .choose_container .country{
+    font-size: 1.5rem;
+    font-weight: 800;
+    position: absolute;
+    right: -1rem;
+    top: -1rem;
+    background: var(--logo);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.choose .choose_container .Lat{
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-text);
+}
+.choose .choose_container .Lon{
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark-text);
+}
+
+.corodinates_container{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.corodinates_container_box{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.Lat_value{
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--nom-text);
+}
+
+.Lon_value{
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--nom-text);
+    line-break: anywhere;
+}
+
+.choose:hover{
+    transition: all 0.3s ease;
+    transform: scale(1.2);
+    z-index: 7;
+}
