@@ -67,6 +67,7 @@
     font-size: 0.7rem;
     font-weight: 600;
     color: var(--nom-text);
+    line-break: anywhere;
 }
 
 .Lon_value{

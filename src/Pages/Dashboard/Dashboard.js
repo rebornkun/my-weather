@@ -4,6 +4,7 @@ import clearCloudy from '../../Assets/clear-cloudy.svg';
 import './Dashboard.css'
 import { useEffect, useState } from 'react';
 import Choose from '../../Components/Choose/Choose';
+import Stat from '../../Components/Stats/Stat';
 
 
 const Dashboard = () => {
@@ -12,12 +13,32 @@ const Dashboard = () => {
     const [query, setQuery] = useState('')
     const [geo, setGeo] = useState([])
     const [choose, setChoose] = useState(false)
-    const [unit, setUnit] = useState('metric')
+    const [unit, setUnit] = useState('default')
     const [currentWeather, SetCurrentWeather] = useState({})
+    const [currentWeatherType, SetCurrentWeatherType] = useState({})
+
+    const [currentCountry, SetCurrentCountry] = useState('')
     const [currentTime, SetCurrentTime] = useState('')
+    const [currentTemp, SetCurrentTemp] = useState('')
+    const [currentPressure, SetCurrentPressure] = useState('')
+    const [currentWindSpeed, SetCurrentWindSpeed] = useState('')
+    const [currentUnits, SetCurrentUnits] = useState([])
+
+    //local variables to pass to state
+    let currentWeatherCountry;
     let currentWeatherTime;
+    let currentWeatherTemp;
+    let currentWeatherPressure;
+    let currentWeatherWindSpeed;
     let currentWeatherTimeZone;
     let AM_or_PM;
+    let dummyweather 
+
+    // units
+    let TempUnit 
+    let pressureUnit 
+    let windSpeedUnit 
+    
 
 
     let key = '7cdde76b930c2cf6be0b92a377a351f1'
@@ -28,7 +49,7 @@ const Dashboard = () => {
 
     useEffect(() => {
         // handleSeachClick()
-
+        getUnit()
         // getGeolocation()
         console.log('refresh')
         console.log('query: ', query)
@@ -64,8 +85,9 @@ const Dashboard = () => {
     
                     setGeo(processedRawGeo[0])
                     setChoose(false)
-                    const lat = processedRawGeo[0].lat
-                    const lon = processedRawGeo[0].lon
+                    getCurrentWeather(processedRawGeo[0].lat, processedRawGeo[0].lon)
+                    // const lat = 
+                    // const lon = 
     
                 }
     
@@ -91,7 +113,38 @@ const Dashboard = () => {
         currentWeatherTimeZone = processedRawCurWeather.timezone;
         let totalcurrentWeatherTime = currentWeatherTime + currentWeatherTimeZone
         covertTimeToUTC(totalcurrentWeatherTime)
+
+        currentWeatherCountry = processedRawCurWeather.sys.country
+        SetCurrentWeatherType(processedRawCurWeather.weather[0])
+        currentWeatherTemp = processedRawCurWeather.main.temp
+        currentWeatherPressure = processedRawCurWeather.main.pressure
+        currentWeatherWindSpeed = processedRawCurWeather.wind.speed
+        shorten_chain(currentWeatherCountry, currentWeatherTemp, currentWeatherPressure, currentWeatherWindSpeed)
         // console.log('CurrentWeatherTime: ', currentWeatherTime)
+
+    }
+
+    const getUnit = () => {
+        if (unit === 'metric'){
+            // U+2109 ℉
+            // U+2103
+            TempUnit = String.fromCodePoint(parseInt(2103,16));
+            windSpeedUnit = 'm/s'
+
+        }else if (unit === 'imperial'){
+
+            TempUnit = String.fromCodePoint(parseInt(2109,16));
+            windSpeedUnit = 'Mi/h'
+            
+        }else if (unit === 'default'){
+
+            TempUnit = 'K'
+            windSpeedUnit = 'Mi/h'
+            
+            // &#8490
+        }
+
+        SetCurrentUnits([ TempUnit , windSpeedUnit])
 
     }
 
@@ -103,15 +156,16 @@ const Dashboard = () => {
         let minutes = dateObj.getUTCMinutes()
         let seconds = dateObj.getUTCSeconds()
         let stringhours = hours.toString()
+        let stringmin = minutes.toString()
 
-        console.log(hours)
         if (hours > 12){
             AM_or_PM = 'PM'
             hours = hours - 12
             //add 0 
             
-        }else if(hours = 12){
+        }else if(hours === 12){
             AM_or_PM = 'PM'
+
         }else{
             AM_or_PM = 'AM'
         }
@@ -120,12 +174,26 @@ const Dashboard = () => {
         if (stringhours.length === 1){
             hours = `0${hours}`
         }
+        if (stringmin.length === 1){
+            minutes = `0${minutes}`
+        }
 
         SetCurrentTime(`${hours}:${minutes}${AM_or_PM}`) 
     }
 
-    console.log('currentWeather2: ', currentWeather)
-    
+    //function to shorten chains due to not been able to pass directly
+    const shorten_chain = (country, temp, pres, wind) => {
+        SetCurrentCountry(country)
+        temp = temp.toFixed(1)
+        SetCurrentTemp(temp) 
+        SetCurrentPressure(pres) 
+        SetCurrentWindSpeed(wind)
+    }
+
+    console.log('currentWeather: ', currentWeather)
+    console.log('currentWeathertype: ', currentWeatherType)
+    console.log('dummyweather ',dummyweather)
+    console.log('currentTemp ',currentTemp)
 
 
     return(
@@ -177,19 +245,15 @@ const Dashboard = () => {
                                     <div className='display_board_details_location_and_date'>
                                         <div className='display_board_details_location'>
                                             <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                            <p>{currentWeather.name}</p> 
+                                            <p>{`${currentWeather.name}, ${currentCountry}`}</p> 
                                         </div>
                                         <div className='display_board_details_date'>
                                             <p>Today {currentTime}</p> 
                                         </div>
                                     </div>
-                                    <div className='display_board_details_temp_and_weather'>
-                                        <div className='display_board_details_temp'>
-                                            <p >14&deg;</p>
-                                            <img src={clearCloudy} alt='weather icon' />
-                                        </div>
-                                        <p className='display_board_details_weather_text'>Mostly clear</p>
-                                    </div>
+
+                                        <Stat currentTemp={currentTemp} currentWeather={currentWeather} currentWeatherType={currentWeatherType} currentUnits={currentUnits} />
+                                    
                                     <div className='display_board_details_others'>
                                         <div className='display_board_details_others_pressure'>
                                             <svg width="113" height="60" viewBox="0 0 113 60" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -200,7 +264,8 @@ const Dashboard = () => {
                                                 <path d="M9.0083 32.0341C35.3741 32.0341 53.9766 34.4269 56.247 35.6233C60.4948 36.8675 62.6188 39.4743 62.6188 45.2421C62.6188 51.1282 52.9513 55.7223 46.5796 51.1282C41.4822 47.453 40.1346 42.4665 40.4275 41.0787" stroke="#6D6464" stroke-width="3"/>
                                                 <path d="M9.0083 29.902C50.0698 29.902 79.0409 26.9415 82.5768 25.4612C89.1923 23.9218 92.5 20.6964 92.5 13.56C92.5 6.27713 77.4441 0.592953 67.5209 6.27713C59.5824 10.8245 57.4837 16.9942 57.9399 18.7113" stroke="#6D6464" stroke-width="3"/>
                                             </svg>
-                                            <p className='smallp'>720hpa</p>
+                                            <p className='smallp'>{currentPressure}hpa</p>
+                                            {/* <p className='smallp'>720hpa</p> */}
                                         </div>
                                         <div className='display_board_details_others_chance_rain'>
                                             <i class="fa fa-tint" aria-hidden="true"></i>
@@ -212,7 +277,7 @@ const Dashboard = () => {
                                                 <path d="M9.0083 41.1734C35.3741 41.1734 53.9766 44.2942 56.247 45.8546C60.4948 47.4775 62.6188 50.8775 62.6188 58.4004C62.6188 66.0777 52.9513 72.0697 46.5796 66.0777C41.4822 61.2841 40.1346 54.7802 40.4275 52.9702" stroke="#6D6464" stroke-width="3"/>
                                                 <path d="M9.0083 38.3924C50.0698 38.3924 79.0409 34.5311 82.5768 32.6004C89.1923 30.5925 92.5 26.3856 92.5 17.0776C92.5 7.57867 77.4441 0.164819 67.5209 7.57866C59.5824 13.5097 57.4837 21.5568 57.9399 23.7964" stroke="#6D6464" stroke-width="3"/>
                                             </svg>
-                                            <p className='smallp'>12km/h</p>
+                                            <p className='smallp'>{`${currentWindSpeed} ${currentUnits[1]}`}</p>
                                         </div>
                                     </div>
                                 </div>
