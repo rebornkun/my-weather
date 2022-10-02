@@ -24,6 +24,7 @@ const Dashboard = () => {
     const [currentTemp, SetCurrentTemp] = useState('')
     const [currentPressure, SetCurrentPressure] = useState('')
     const [currentWindSpeed, SetCurrentWindSpeed] = useState('')
+    const [currentHumidity, SetCurrentHumidity] = useState('')
     const [currentUnits, SetCurrentUnits] = useState([])
     const [timeToSunRise, SetTimeToSunRise] = useState('')
     const [timeToSunSet, SetTimeToSunSet] = useState('')
@@ -42,6 +43,7 @@ const Dashboard = () => {
     let currentWeatherTemp;
     let currentWeatherPressure;
     let currentWeatherWindSpeed;
+    let currentWeatherHumidity;
     let currentWeatherTimeZone;
     let AM_or_PM; 
     let windDirection; 
@@ -133,7 +135,7 @@ const Dashboard = () => {
             console.log('sunset unit ',totalsunset)
             SetTimeToSunRise(covertTimeToUTC(totalsunrise))
             SetTimeToSunSet(covertTimeToUTC(totalsunset))
-            Check_time_of_day(totalcurrentWeatherTime, totalsunrise, totalsunset)
+            Checktimeofday(totalcurrentWeatherTime, totalsunrise, totalsunset)
             getForcastWeatherThreeHours(lat, lon, unit)
             getForcastWeatherDaily(lat, lon, unit)
             // getPrevForcastWeatherPerHour(lat, lon, totalsunrise, totalsunset)
@@ -143,8 +145,10 @@ const Dashboard = () => {
             currentWeatherTemp = processedRawCurWeather.main.temp
             currentWeatherPressure = processedRawCurWeather.main.pressure
             currentWeatherWindSpeed = processedRawCurWeather.wind.speed
-            shorten_chain(currentWeatherCountry, currentWeatherTemp, currentWeatherPressure, currentWeatherWindSpeed)
+            currentWeatherHumidity = processedRawCurWeather.main.humidity
+            shorten_chain(currentWeatherCountry, currentWeatherTemp, currentWeatherPressure, currentWeatherWindSpeed, currentWeatherHumidity)
             handleWindDirectionMeter(processedRawCurWeather.wind.deg)
+            handleHumidityMeter(processedRawCurWeather.main.humidity)
         }
         // console.log('CurrentWeatherTime: ', currentWeatherTime)
 
@@ -181,8 +185,13 @@ const Dashboard = () => {
             SetEveningTemp(evening)
             SetNightTemp(night)
             SetForcastDaily(processedRawFurWeatherDaily)
-            SetDailyTemp([morning, afternoon, evening, night])
-            alignslope()
+            let slopeVars = []
+            slopeVars.push(Number(morning))
+            slopeVars.push(Number(afternoon))
+            slopeVars.push(Number(evening))
+            slopeVars.push(Number(night))
+            alignslope(slopeVars, slopeVars) 
+            // SetDailyTemp([morning, afternoon, evening, night])
 
         }
     }
@@ -258,7 +267,7 @@ const Dashboard = () => {
 
     //function to shorten chains due to not been able to pass directly
     //also shortens the temp
-    const shorten_chain = (country, temp, pres, wind) => {
+    const shorten_chain = (country, temp, pres, wind, humidity) => {
         SetCurrentCountry(country)
         temp = temp.toFixed(0)
         SetCurrentTemp(temp) 
@@ -270,24 +279,39 @@ const Dashboard = () => {
         }
 
         SetCurrentWindSpeed(wind)
+        SetCurrentHumidity(humidity)
     }
 
     //function to check time of day
-    const Check_time_of_day = (CurrentTimeUnix, sunriseunix, sunsetunix) =>{
+    const Checktimeofday = (CurrentTimeUnix, sunriseunix, sunsetunix) =>{
 
+        console.log('checking time of day')
         let sunrisediff = sunriseunix - CurrentTimeUnix;
         let sunsetdiff = sunsetunix - CurrentTimeUnix;
 
         if (sunriseunix < CurrentTimeUnix && sunsetunix > CurrentTimeUnix){
             SetTimeOfDay('day')
+            // console.log('setting time of day to day')
         }else if (sunriseunix > CurrentTimeUnix && sunsetunix < CurrentTimeUnix){
             SetTimeOfDay('night')
+            // console.log('setting time of day to night')
         }else if (sunriseunix > CurrentTimeUnix && sunsetunix > CurrentTimeUnix){
 
             if (sunrisediff < sunsetdiff){
                 SetTimeOfDay('night')
+                // console.log('setting time of day to night')
             }else{
                 SetTimeOfDay('day')
+                // console.log('setting time of day to day')
+            }
+        }else if (sunriseunix < CurrentTimeUnix && sunsetunix < CurrentTimeUnix){
+
+            if (sunrisediff < sunsetdiff){
+                SetTimeOfDay('night')
+                // console.log('setting time of day to night')
+            }else{
+                SetTimeOfDay('day')
+                // console.log('setting time of day to day')
             }
         }
 
@@ -313,19 +337,91 @@ const Dashboard = () => {
         windDirectionMeter.style.transform = `rotate(${windDirection}deg)`;
     }
 
-    const alignslope = () => {
-        let dailyarraysorting = dailyTemp
-        dailyarraysorting.sort((a, b) => (a > b));
-        const highestdailytemp = parseInt(dailyarraysorting[0])
-        const lowestdailytemp = parseInt(dailyarraysorting[3])
+    const handleHumidityMeter = (deg) => {
+        let degreelevel = 3.6 * deg
+        let title
+        if (deg < 40){
+            title = 'Low'
+        }else if(deg > 40 && deg < 60){
+            title = 'Mid'
+        }else(
+            title = 'High'
+        )
+        console.log('degreelevel: ', degreelevel)
+        let HumidityMeter = document.getElementById('humidity_level_loading')
+        // let HumidityMetertwo = document.getElementsByClassName('.meter_circle_uv_inner_circle_loading').style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${degreelevel}deg, var(--weather-text) 0deg);`
+        let HumidityMetertwo = document.getElementsByClassName('.meter_circle_uv_inner_circle_loading')[0].style.height = '50%'
+        let HumidityTitle = document.getElementById('humidity_level_title').innerText = title;
+        HumidityMeter.style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${degreelevel}deg, var(--weather-text) 0deg);`;
+        HumidityMeter.style.transform = `rotate(${degreelevel}deg)`;
+        HumidityTitle.style.transform = 'rotate(45deg)';
+
+    }
+
+    const alignslope = (dailyTempToBeSorted) => {
+        let dailyarray = []
+        dailyarray.push(dailyTempToBeSorted[0])
+        dailyarray.push(dailyTempToBeSorted[1])
+        dailyarray.push(dailyTempToBeSorted[2])
+        dailyarray.push(dailyTempToBeSorted[3])
+        let dailyarraysorting = dailyTempToBeSorted
+        dailyarraysorting.sort((a, b) => (a - b));
+        const highestdailytemp = dailyarraysorting[3]
+        const lowestdailytemp = dailyarraysorting[0]
 
         let diffHighesttemp_n_Lowesttemp = highestdailytemp - lowestdailytemp
-        console.log('diffHighesttemp_n_Lowesttemp: ', diffHighesttemp_n_Lowesttemp)
 
-        let morningPoint = document.getElementById('morning')
-        let afternoonPoint = document.getElementById('afternoon')
-        let eveningPoint = document.getElementById('evening')
-        let nightPoint = document.getElementById('night')
+        if (diffHighesttemp_n_Lowesttemp < 5){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 4  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 5 && diffHighesttemp_n_Lowesttemp < 10){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 20  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 10 && diffHighesttemp_n_Lowesttemp < 15){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 40  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 15 && diffHighesttemp_n_Lowesttemp < 20){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 60  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 20 && diffHighesttemp_n_Lowesttemp < 25){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 80  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 25 && diffHighesttemp_n_Lowesttemp < 30){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 100  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 30 && diffHighesttemp_n_Lowesttemp < 35){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 120  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 35 && diffHighesttemp_n_Lowesttemp < 40){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 140 //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 40 && diffHighesttemp_n_Lowesttemp < 45){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 180  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 45 && diffHighesttemp_n_Lowesttemp < 50){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 200  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 50 && diffHighesttemp_n_Lowesttemp < 55){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 220  //share the slope to sections
+        }
+
+        // console.log('dailyarray: ', dailyarray)
+        // console.log('dailyarraysorting: ', dailyarraysorting)
+        // console.log('diffHighesttemp_n_Lowesttemp: ', diffHighesttemp_n_Lowesttemp)
+
+        let generalLowestPoint = 3 
+        
+        let levelfirstArray = dailyarray.map((degree, i) => {
+            return degree - lowestdailytemp
+        })
+        let levelsecondArray = levelfirstArray.map((degree, i) => {
+            return degree * diffHighesttemp_n_Lowesttemp
+        })
+        let settingLevels = levelsecondArray.map((degree, i) => {
+            return degree - generalLowestPoint
+        })
+        // console.log('levelArray: ', settingLevels)
+        
+        let morningTempLevel = settingLevels[0]
+        let afternoonTempLevel = settingLevels[1]
+        let eveningTempLevel = settingLevels[2]
+        let nightTempLevel = settingLevels[3]
+
+        
+        let morningPoint = document.getElementById('morning').style.bottom = `${morningTempLevel}rem`
+        let afternoonPoint = document.getElementById('afternoon').style.bottom = `${afternoonTempLevel}rem`
+        let eveningPoint = document.getElementById('evening').style.bottom = `${eveningTempLevel}rem`
+        let nightPoint = document.getElementById('night').style.bottom = `${nightTempLevel}rem`
     }
 
     console.log('currentWeather: ', currentWeather)
@@ -390,23 +486,26 @@ const Dashboard = () => {
                     {/* show choose if queries are more than 1 */}
                     { choose ?
 
-                    <div className='choose_dash_container'>
-                        {
-                            geo.map((location, index) => {
-                                return (
-                                <Choose 
-                                    key={index}
-                                    id={location.id} 
-                                    name={location.name}
-                                    state={location.state}
-                                    country={location.country}
-                                    lat={location.lat}
-                                    lon={location.lon}
-                                    getId={getId}
-                                />
-                                ); 
-                            })
-                        }
+                    <div className='choose_dash'>
+                        <p className='choose_dash_abeg'>We found a few Locations, Agba Help Us Out.</p>
+                        <div className='choose_dash_container'>
+                            {
+                                geo.map((location, index) => {
+                                    return (
+                                    <Choose 
+                                        key={index}
+                                        id={location.id} 
+                                        name={location.name}
+                                        state={location.state}
+                                        country={location.country}
+                                        lat={location.lat}
+                                        lon={location.lon}
+                                        getId={getId}
+                                    />
+                                    ); 
+                                })
+                            }
+                        </div>
                     </div>
 
                     :
@@ -444,12 +543,16 @@ const Dashboard = () => {
                                                 <path d="M9.0083 32.0341C35.3741 32.0341 53.9766 34.4269 56.247 35.6233C60.4948 36.8675 62.6188 39.4743 62.6188 45.2421C62.6188 51.1282 52.9513 55.7223 46.5796 51.1282C41.4822 47.453 40.1346 42.4665 40.4275 41.0787" stroke="#6D6464" stroke-width="3"/>
                                                 <path d="M9.0083 29.902C50.0698 29.902 79.0409 26.9415 82.5768 25.4612C89.1923 23.9218 92.5 20.6964 92.5 13.56C92.5 6.27713 77.4441 0.592953 67.5209 6.27713C59.5824 10.8245 57.4837 16.9942 57.9399 18.7113" stroke="#6D6464" stroke-width="3"/>
                                             </svg>
-                                            <p className='smallp'>{currentPressure}hpa</p>
+                                            <p className='smallp'>{currentPressure}hPa</p>
                                             {/* <p className='smallp'>720hpa</p> */}
                                         </div>
                                         <div className='display_board_details_others_chance_rain'>
                                             <i class="fa fa-tint" aria-hidden="true"></i>
                                             <p className='smallp'>24%</p>
+                                        </div>
+                                        <div className='display_board_details_others_chance_rain'>
+                                            <i class="fa fa-tint" aria-hidden="true"></i>
+                                            <p className='smallp'>{currentHumidity}%</p>
                                         </div>
                                         <div className='display_board_details_others_wind_speed'>
                                             <svg width="94" height="71" viewBox="0 0 94 71" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -561,8 +664,8 @@ const Dashboard = () => {
                                 <div className='dashboard_firstpart_rest_buttom_left_box'>
                                     <div className='text_part'>
                                         <p className='text_part_bold_text'>Pressure</p>
-                                        <p className='text_part_light_text'>Today Wind Speed</p>
-                                        <p className='text_part_bold_text'>729 hpa</p>
+                                        <p className='text_part_light_text'>Today Wind Pressure</p>
+                                        <p className='text_part_bold_text'>{currentPressure} hPa</p>
                                     </div>
                                     <div className='meter'>
                                         <div className=' no_border pressure_circle'>
@@ -576,16 +679,16 @@ const Dashboard = () => {
                                 </div>
                                 <div className='dashboard_firstpart_rest_buttom_right_box'>
                                     <div className='text_part'>
-                                        <p className='text_part_bold_text'>Uv Index</p>
-                                        <p className='text_part_light_text'>Today Uv Index</p>
-                                        <p className='text_part_bold_text'>2</p>
+                                        <p className='text_part_bold_text'>Humidity</p>
+                                        <p className='text_part_light_text'>Today humidity</p>
+                                        <p className='text_part_bold_text'>{currentHumidity}%</p>
                                     </div>
                                     <div className='meter'>
                                         <div className='meter_circle no_border'>
-                                            <div className='meter_circle_uv_inner_circle_loading'>
+                                            <div id='humidity_level_loading' className='meter_circle_uv_inner_circle_loading' style={{background: `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) 50deg, var(--weather-text) 0deg);`}}>
                                             </div>
                                             <div className='meter_circle_uv_last_circle'>
-                                                <p>Low</p>
+                                                <p id='humity_level_title' className='humity_level_title'>Low</p>
                                             </div>
                                         </div>
                                     </div>

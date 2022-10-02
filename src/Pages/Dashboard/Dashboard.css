@@ -419,15 +419,19 @@
 /* the highest deg ends at  -2rem */
 .today_temp_unit_point.morning{
     bottom: -2rem;
+    transition: all 0.3s ease;
 }
 .today_temp_unit_point.afternoon{
     bottom: -2rem;
+    transition: all 0.3s ease;
 }
 .today_temp_unit_point.evening{
     bottom: -2rem;
+    transition: all 0.3s ease;
 }
 .today_temp_unit_point.night{
     bottom: -2rem;
+    transition: all 0.3s ease;
 }
 
 
@@ -797,9 +801,21 @@
 
 
 
+.choose_dash{
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.choose_dash_abeg{
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--nom-text);
+}
 
 .choose_dash_container{
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
