@@ -1,6 +1,7 @@
 import SearchBox from '../../Components/SearchBox/SearchBox';
 import Weekly from '../../Components/Weekly/Weekly';
 import clearCloudy from '../../Assets/clear-cloudy.svg';
+import night from '../../Assets/night.svg';
 import './Dashboard.css'
 import { useEffect, useState } from 'react';
 import Choose from '../../Components/Choose/Choose';
@@ -13,9 +14,10 @@ const Dashboard = () => {
     const [query, setQuery] = useState('')
     const [geo, setGeo] = useState([])
     const [choose, setChoose] = useState(false)
-    const [unit, setUnit] = useState('default')
+    const [unit, setUnit] = useState('metric')
     const [currentWeather, SetCurrentWeather] = useState({})
     const [currentWeatherType, SetCurrentWeatherType] = useState({})
+    const [lat_n_lon, SetLat_N_Lon] = useState([])
 
     const [currentCountry, SetCurrentCountry] = useState('')
     const [currentTime, SetCurrentTime] = useState('')
@@ -23,6 +25,16 @@ const Dashboard = () => {
     const [currentPressure, SetCurrentPressure] = useState('')
     const [currentWindSpeed, SetCurrentWindSpeed] = useState('')
     const [currentUnits, SetCurrentUnits] = useState([])
+    const [timeToSunRise, SetTimeToSunRise] = useState('')
+    const [timeToSunSet, SetTimeToSunSet] = useState('')
+    const [timeOfDay, SetTimeOfDay] = useState('')
+    const [population, SetPopulation] = useState('')
+    const [forcastDaily, SetForcastDaily] = useState({})
+    const [morningTemp, SetMorningTemp] = useState('')
+    const [afternoonTemp, SetAfternoonTemp] = useState('')
+    const [eveningTemp, SetEveningTemp] = useState('')
+    const [nightTemp, SetNightTemp] = useState('')
+    const [dailyTemp, SetDailyTemp] = useState([])
 
     //local variables to pass to state
     let currentWeatherCountry;
@@ -31,15 +43,13 @@ const Dashboard = () => {
     let currentWeatherPressure;
     let currentWeatherWindSpeed;
     let currentWeatherTimeZone;
-    let AM_or_PM;
-    let dummyweather 
+    let AM_or_PM; 
+    let windDirection; 
 
     // units
     let TempUnit 
-    let pressureUnit 
     let windSpeedUnit 
     
-
 
     let key = '7cdde76b930c2cf6be0b92a377a351f1'
     let url = 'http://api.openweathermap.org/'
@@ -50,11 +60,11 @@ const Dashboard = () => {
     useEffect(() => {
         // handleSeachClick()
         getUnit()
-        // getGeolocation()
-        console.log('refresh')
-        console.log('query: ', query)
-        console.log('Geo: ', geo)
-    },[geo,currentWeather])
+        getCurrentWeather(lat_n_lon[0], lat_n_lon[1], unit)
+        // console.log('refresh')
+        // console.log('query: ', query)
+        // console.log('Geo: ', geo)
+    },[geo,unit,lat_n_lon,timeOfDay])
 
     const handleSeachClick = (e) => {
         let searchbox = document.getElementById('search');
@@ -69,25 +79,23 @@ const Dashboard = () => {
             console.log('fetch')
             searchboxvalue = ''
             const processedRawGeo = await rawGeo.json()
-            
+                    console.log('processedRawGeo: ', processedRawGeo.length)
                 if (processedRawGeo.length > 1){
                     const processedRawGeoWID = processedRawGeo.map((olocation , i) => {
                         return Object.assign(olocation, {id: i});
                     })
-                    console.log(processedRawGeoWID)
                     setGeo(processedRawGeoWID)
                     setChoose(true)
                     // geoArray = geoArray.concat(processedRawGeo)
                     // console.log(`lat: ${lat}, lon: ${lon}`)
-                    console.log(`geoArray: ${geo}`)
+                    // console.log(`geoArray: ${geo}`)
     
                 }else if(processedRawGeo.length === 1){
     
                     setGeo(processedRawGeo[0])
                     setChoose(false)
-                    getCurrentWeather(processedRawGeo[0].lat, processedRawGeo[0].lon)
-                    // const lat = 
-                    // const lon = 
+                    SetLat_N_Lon([processedRawGeo[0].lat, processedRawGeo[0].lon])
+                    getCurrentWeather(processedRawGeo[0].lat, processedRawGeo[0].lon, unit)
     
                 }
     
@@ -99,35 +107,102 @@ const Dashboard = () => {
     const getId = (id) => {
         // return id;
         let presentChoice = geo[id]
-        getCurrentWeather(presentChoice.lat, presentChoice.lon)
+        SetLat_N_Lon([presentChoice.lat, presentChoice.lon])
+        getCurrentWeather(presentChoice.lat, presentChoice.lon, unit)
         setChoose(false)
-        console.log(presentChoice)
+        // console.log(presentChoice)
     }
 
-    const getCurrentWeather = async function(lat, lon){
+    const getCurrentWeather = async function(lat, lon, unit){
         
-        const rawCurWeather = await fetch(`${url}data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
-        const processedRawCurWeather = await rawCurWeather.json()
-        SetCurrentWeather(processedRawCurWeather)
-        currentWeatherTime = processedRawCurWeather.dt;
-        currentWeatherTimeZone = processedRawCurWeather.timezone;
-        let totalcurrentWeatherTime = currentWeatherTime + currentWeatherTimeZone
-        covertTimeToUTC(totalcurrentWeatherTime)
-
-        currentWeatherCountry = processedRawCurWeather.sys.country
-        SetCurrentWeatherType(processedRawCurWeather.weather[0])
-        currentWeatherTemp = processedRawCurWeather.main.temp
-        currentWeatherPressure = processedRawCurWeather.main.pressure
-        currentWeatherWindSpeed = processedRawCurWeather.wind.speed
-        shorten_chain(currentWeatherCountry, currentWeatherTemp, currentWeatherPressure, currentWeatherWindSpeed)
+        if (lat.length === 0 || lon.length === 0){
+            alert('no co-ordinates')
+        }else{
+            const rawCurWeather = await fetch(`${url}data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
+            console.log('fetching')
+            const processedRawCurWeather = await rawCurWeather.json()
+            SetCurrentWeather(processedRawCurWeather)
+            currentWeatherTime = processedRawCurWeather.dt;
+            currentWeatherTimeZone = processedRawCurWeather.timezone;
+            let totalcurrentWeatherTime = currentWeatherTime + currentWeatherTimeZone
+            let totalsunrise = processedRawCurWeather.sys.sunrise + currentWeatherTimeZone
+            let totalsunset = processedRawCurWeather.sys.sunset + currentWeatherTimeZone
+            SetCurrentTime(covertTimeToUTC(totalcurrentWeatherTime))
+            console.log('totalcurrentWeatherTime ',totalcurrentWeatherTime)
+            console.log('sunrise unix ',totalsunrise)
+            console.log('sunset unit ',totalsunset)
+            SetTimeToSunRise(covertTimeToUTC(totalsunrise))
+            SetTimeToSunSet(covertTimeToUTC(totalsunset))
+            Check_time_of_day(totalcurrentWeatherTime, totalsunrise, totalsunset)
+            getForcastWeatherThreeHours(lat, lon, unit)
+            getForcastWeatherDaily(lat, lon, unit)
+            // getPrevForcastWeatherPerHour(lat, lon, totalsunrise, totalsunset)
+    
+            currentWeatherCountry = processedRawCurWeather.sys.country
+            SetCurrentWeatherType(processedRawCurWeather.weather[0])
+            currentWeatherTemp = processedRawCurWeather.main.temp
+            currentWeatherPressure = processedRawCurWeather.main.pressure
+            currentWeatherWindSpeed = processedRawCurWeather.wind.speed
+            shorten_chain(currentWeatherCountry, currentWeatherTemp, currentWeatherPressure, currentWeatherWindSpeed)
+            handleWindDirectionMeter(processedRawCurWeather.wind.deg)
+        }
         // console.log('CurrentWeatherTime: ', currentWeatherTime)
 
     }
 
+    const getForcastWeatherThreeHours = async function(lat, lon, unit){
+        if (lat.length === 0 || lon.length === 0){
+            alert('no co-ordinates')
+        }else{
+            const rawForWeather = await fetch(`${url}data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}&cnt=${5}`)
+            // console.log('fetching')
+            const processedRawFurWeather = await rawForWeather.json()
+            console.log('forcast: ', processedRawFurWeather)
+            
+            SetPopulation(processedRawFurWeather.city.population)
+        }
+    }
+
+    const getForcastWeatherDaily = async function(lat, lon, unit){
+        if (lat.length === 0 || lon.length === 0){
+            alert('no co-ordinates')
+        }else{
+            const rawForWeatherDaily = await fetch(`${url}data/2.5/forecast/daily?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
+
+            // console.log('fetching')
+            const processedRawFurWeatherDaily = await rawForWeatherDaily.json()
+            // console.log('Forcast Daily: ', processedRawFurWeatherDaily)
+            let morning = processedRawFurWeatherDaily.list[0].temp.morn.toFixed(0)
+            let afternoon = processedRawFurWeatherDaily.list[0].temp.day.toFixed(0)
+            let evening = processedRawFurWeatherDaily.list[0].temp.night.toFixed(0)
+            let night = processedRawFurWeatherDaily.list[0].temp.eve.toFixed(0)
+            SetMorningTemp(morning)
+            SetAfternoonTemp(afternoon)
+            SetEveningTemp(evening)
+            SetNightTemp(night)
+            SetForcastDaily(processedRawFurWeatherDaily)
+            SetDailyTemp([morning, afternoon, evening, night])
+            alignslope()
+
+        }
+    }
+
+    //doent work cause i didnt pay lol.. sapa nice one
+    // const getPrevForcastWeatherPerHour = async function(lat, lon, start, end, cnt){
+    //     if (lat.length === 0 || lon.length === 0){
+    //         alert('no co-ordinates')
+    //     }else{
+    //         const rawPFWeatherPerHour = await fetch(`${url}data/2.5/history/city?=${lat}&lon=${lon}&appid=${key}&type=hour&start=${start}&cnt=${24}`)
+    //         // console.log('fetching')
+    //         const processedRawPrevFurWeatherPerHour = await rawPFWeatherPerHour.json()
+    //         console.log('prevforcast: ', processedRawPrevFurWeatherPerHour)
+            
+    //     }
+    // }
+
     const getUnit = () => {
         if (unit === 'metric'){
-            // U+2109 ℉
-            // U+2103
+
             TempUnit = String.fromCodePoint(parseInt(2103,16));
             windSpeedUnit = 'm/s'
 
@@ -139,9 +214,8 @@ const Dashboard = () => {
         }else if (unit === 'default'){
 
             TempUnit = 'K'
-            windSpeedUnit = 'Mi/h'
-            
-            // &#8490
+            windSpeedUnit = 'Km/h'
+
         }
 
         SetCurrentUnits([ TempUnit , windSpeedUnit])
@@ -178,22 +252,95 @@ const Dashboard = () => {
             minutes = `0${minutes}`
         }
 
-        SetCurrentTime(`${hours}:${minutes}${AM_or_PM}`) 
+        return `${hours}:${minutes}${AM_or_PM}`
+        // SetCurrentTime(`${hours}:${minutes}${AM_or_PM}`) 
     }
 
     //function to shorten chains due to not been able to pass directly
+    //also shortens the temp
     const shorten_chain = (country, temp, pres, wind) => {
         SetCurrentCountry(country)
-        temp = temp.toFixed(1)
+        temp = temp.toFixed(0)
         SetCurrentTemp(temp) 
         SetCurrentPressure(pres) 
+
+        //convert wind speed if Unit is default
+        if (unit === 'default'){
+            wind = wind * 3.6
+        }
+
         SetCurrentWindSpeed(wind)
+    }
+
+    //function to check time of day
+    const Check_time_of_day = (CurrentTimeUnix, sunriseunix, sunsetunix) =>{
+
+        let sunrisediff = sunriseunix - CurrentTimeUnix;
+        let sunsetdiff = sunsetunix - CurrentTimeUnix;
+
+        if (sunriseunix < CurrentTimeUnix && sunsetunix > CurrentTimeUnix){
+            SetTimeOfDay('day')
+        }else if (sunriseunix > CurrentTimeUnix && sunsetunix < CurrentTimeUnix){
+            SetTimeOfDay('night')
+        }else if (sunriseunix > CurrentTimeUnix && sunsetunix > CurrentTimeUnix){
+
+            if (sunrisediff < sunsetdiff){
+                SetTimeOfDay('night')
+            }else{
+                SetTimeOfDay('day')
+            }
+        }
+
+    }
+
+    //funstion to change unit on click
+    const handleUnitButtonClick = () => {
+        const unit_change_button = document.getElementById('unit_button_option')
+
+        if (unit_change_button.classList.contains('active')){
+            unit_change_button.classList.remove('active')
+            setUnit('metric')
+            
+        }else{
+            unit_change_button.classList.add('active')
+            setUnit('imperial')
+        }
+    }
+
+    const handleWindDirectionMeter = (deg) => {
+        windDirection = deg - 45
+        let windDirectionMeter = document.getElementById('wind_meter_guage')
+        windDirectionMeter.style.transform = `rotate(${windDirection}deg)`;
+    }
+
+    const alignslope = () => {
+        let dailyarraysorting = dailyTemp
+        dailyarraysorting.sort((a, b) => (a > b));
+        const highestdailytemp = parseInt(dailyarraysorting[0])
+        const lowestdailytemp = parseInt(dailyarraysorting[3])
+
+        let diffHighesttemp_n_Lowesttemp = highestdailytemp - lowestdailytemp
+        console.log('diffHighesttemp_n_Lowesttemp: ', diffHighesttemp_n_Lowesttemp)
+
+        let morningPoint = document.getElementById('morning')
+        let afternoonPoint = document.getElementById('afternoon')
+        let eveningPoint = document.getElementById('evening')
+        let nightPoint = document.getElementById('night')
     }
 
     console.log('currentWeather: ', currentWeather)
     console.log('currentWeathertype: ', currentWeatherType)
-    console.log('dummyweather ',dummyweather)
     console.log('currentTemp ',currentTemp)
+    console.log('sunrise ', timeToSunRise)
+    console.log('sunset ', timeToSunSet)
+    console.log('timeOfDay ', timeOfDay)
+    console.log('Unit ', unit)
+    console.log('lat_n_lon ', lat_n_lon)
+    console.log('Forcast Daily: ', forcastDaily)
+    console.log('morningTemp: ', morningTemp)
+    console.log('afternoonTemp: ', afternoonTemp)
+    console.log('eveningTemp: ', eveningTemp)
+    console.log('nightTemp: ', nightTemp)
 
 
     return(
@@ -202,10 +349,37 @@ const Dashboard = () => {
                 <div className='dashboard_firstpart'>
                     <div className='dashboard_firstpart_top'>
                         <SearchBox handleSearchChange={handleSearchChange} handleSeachClick={handleSeachClick} />
-                        <div className='dashboard_firstpart_top_other_buttons'>
+                        <div className='dashboard_firstpart_top_other_buttons' >
+                            <div className='unit_button' onClick={handleUnitButtonClick}>
+                                <p className='unit_base_option'>{String.fromCodePoint(parseInt(2103,16))}</p>
+                                <p className='unit_base_option'>{String.fromCodePoint(parseInt(2109,16))}</p>
+                                <div id='unit_button_option' className='unit_button_option'>
+                                    <p>{currentUnits[0]}</p>
+                                </div>
+                            </div>
+                            <div className='sunrise_sunset'>
+                                { timeOfDay === "night" ?
+                                    <div className='time_to_sunriseOrset'>
+                                    <img src={clearCloudy} alt='day' />
+                                    <p>in</p>
+                                    <p>{timeToSunRise}</p>
+                                    </div>
+                                : 
+                                timeOfDay === "day" ?
+                                    
+                                    <div className='time_to_sunriseOrset'>
+                                    <img src={night} alt='night' />
+                                    <p>in</p>
+                                    <p>{timeToSunSet}</p>
+                                    </div>
+                                :
+                                    <div className='time_to_sunriseOrset'>
+                                    </div>
+                                    
+                                }
+                            </div>
                             <div className='notification_button'>
                                 <i class="fa fa-bell-o" aria-hidden="true"><div className='notify'></div></i>
-                                
                             </div>
                             <div className='Profile_button'>
                                 <i class="fa fa-user" aria-hidden="true"></i>
@@ -244,8 +418,14 @@ const Dashboard = () => {
                                 <div className='display_board_details'>
                                     <div className='display_board_details_location_and_date'>
                                         <div className='display_board_details_location'>
-                                            <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                            <p>{`${currentWeather.name}, ${currentCountry}`}</p> 
+                                            <div className='display_board_details_location_container'>
+                                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                                <p>{`${currentWeather.name}, ${currentCountry}`}</p> 
+                                            </div>
+                                            <div className='display_board_details_population_container'>
+                                                <i class="fa fa-users" aria-hidden="true"></i>
+                                                <p className='population'>{population}</p> 
+                                            </div>
                                         </div>
                                         <div className='display_board_details_date'>
                                             <p>Today {currentTime}</p> 
@@ -287,16 +467,16 @@ const Dashboard = () => {
                                         <div className='display_board_temperature_today_temp_curve'>
                                             <div className='dot_container'>
                                                 <div className='today_temp_unit_point_container'>
-                                                    <div className='today_temp_unit_point morning'></div>
+                                                    <div id='morning' className='today_temp_unit_point morning'></div>
                                                 </div>
                                                 <div className='today_temp_unit_point_container'>
-                                                    <div className='today_temp_unit_point afternoon'></div>   
+                                                    <div id='afternoon' className='today_temp_unit_point afternoon'></div>   
                                                 </div>
                                                 <div className='today_temp_unit_point_container'>
-                                                    <div className='today_temp_unit_point evening'></div>
+                                                    <div id='evening' className='today_temp_unit_point evening'></div>
                                                 </div>
                                                 <div className='today_temp_unit_point_container'>
-                                                    <div className='today_temp_unit_point night'></div>
+                                                    <div id='night' className='today_temp_unit_point night'></div>
                                                 </div>
                                             </div>
                                             {/* <div className='display_board_temperature_today_temp_curve_line'>
@@ -309,19 +489,19 @@ const Dashboard = () => {
                                         <div className='display_board_temperature_today_temp'>
                                             <div className='today_temp_unit'>
                                                 <p className='today_temp_unit_time'>Morning</p>
-                                                <p className='today_temp_unit_temp'>15&deg;</p>
+                                                <p className='today_temp_unit_temp'>{morningTemp}{currentUnits[0]}</p>
                                             </div>
                                             <div className='today_temp_unit'>
                                                 <p className='today_temp_unit_time'>Afternoon</p>
-                                                <p className='today_temp_unit_temp'>14&deg;</p>
+                                                <p className='today_temp_unit_temp'>{afternoonTemp}{currentUnits[0]}</p>
                                             </div>
                                             <div className='today_temp_unit'>
                                                 <p className='today_temp_unit_time'>Evening</p>
-                                                <p className='today_temp_unit_temp'>16&deg;</p>
+                                                <p className='today_temp_unit_temp'>{eveningTemp}{currentUnits[0]}</p>
                                             </div>
                                             <div className='today_temp_unit'>
                                                 <p className='today_temp_unit_time'>Night</p>
-                                                <p className='today_temp_unit_temp'>12&deg;</p>
+                                                <p className='today_temp_unit_temp'>{nightTemp}{currentUnits[0]}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -335,7 +515,7 @@ const Dashboard = () => {
                                     <div className='text_part'>
                                         <p className='text_part_bold_text'>Wind</p>
                                         <p className='text_part_light_text'>Today Wind Speed</p>
-                                        <p className='text_part_bold_text'>12km/h</p>
+                                        <p className='text_part_bold_text'>{`${currentWindSpeed} ${currentUnits[1]}`}</p>
                                     </div>
                                     <div className='meter'>
                                         <div className='meter_circle'>
@@ -351,7 +531,7 @@ const Dashboard = () => {
                                                     <p className='cardinal_points_S'>S</p>
                                                 </div>
                                             </div>
-                                            <svg width="100%" height="20" viewBox="0 0 141 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <svg id='wind_meter_guage' width="100%" height="20" viewBox="0 0 141 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M18 10H129" stroke="black" stroke-width="6"/>
                                                 <path d="M141 10L126 1.33974V18.6603L141 10Z" fill="black"/>
                                                 <circle cx="10" cy="10" r="7" stroke="black" stroke-width="6"/>
@@ -427,22 +607,22 @@ const Dashboard = () => {
                                     <div className='today_forecast_hourly_box'>
                                         <p className='today_forecast_hourly_box_time'>Now</p>
                                         <img src={clearCloudy} alt="weather icon"/>
-                                        <p className='today_forecast_hourly_box_temp'>14&deg;</p>
+                                        <p className='today_forecast_hourly_box_temp'>{currentTemp}{currentUnits[0]}</p>
                                     </div>
                                     <div className='today_forecast_hourly_box_normal'>
                                         <p className='today_forecast_hourly_box_time_nom'>01PM</p>
                                         <img src={clearCloudy} alt="weather icon"/>
-                                        <p className='today_forecast_hourly_box_temp_nom'>16&deg;</p>
+                                        <p className='today_forecast_hourly_box_temp_nom'>16{currentUnits[0]}</p>
                                     </div>
                                     <div className='today_forecast_hourly_box_normal'>
                                         <p className='today_forecast_hourly_box_time_nom'>02PM</p>
                                         <img src={clearCloudy} alt="weather icon"/>
-                                        <p className='today_forecast_hourly_box_temp_nom'>15&deg;</p>
+                                        <p className='today_forecast_hourly_box_temp_nom'>15{currentUnits[0]}</p>
                                     </div>
                                     <div className='today_forecast_hourly_box_normal'>
                                         <p className='today_forecast_hourly_box_time_nom'>03PM</p>
                                         <img src={clearCloudy} alt="weather icon"/>
-                                        <p className='today_forecast_hourly_box_temp_nom'>15&deg;</p>
+                                        <p className='today_forecast_hourly_box_temp_nom'>15{currentUnits[0]}</p>
                                     </div>
                                 </div>
                             </div>

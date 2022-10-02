@@ -11,7 +11,7 @@ const Stat = ({currentTemp, currentWeather ,currentWeatherType, currentUnits}) =
     return(
         <div className='display_board_details_temp_and_weather'>
             <div className='display_board_details_temp'>
-                <p>{currentTemp} {currentUnits[0]}</p>
+                <p>{currentTemp}{currentUnits[0]}</p>
                 <img src={clearCloudy} alt='weather icon' />
             </div>
             {/* <p className='display_board_details_weather_text'></p>   */}
