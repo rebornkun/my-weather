@@ -47,6 +47,7 @@ const Dashboard = () => {
     let currentWeatherTimeZone;
     let AM_or_PM; 
     let windDirection; 
+    let humidityLevel; 
 
     // units
     let TempUnit 
@@ -338,7 +339,7 @@ const Dashboard = () => {
     }
 
     const handleHumidityMeter = (deg) => {
-        let degreelevel = 3.6 * deg
+        humidityLevel = 3.6 * deg
         let title
         if (deg < 40){
             title = 'Low'
@@ -347,14 +348,14 @@ const Dashboard = () => {
         }else(
             title = 'High'
         )
-        console.log('degreelevel: ', degreelevel)
+        console.log('humidityLevel: ', humidityLevel)
         let HumidityMeter = document.getElementById('humidity_level_loading')
         // let HumidityMetertwo = document.getElementsByClassName('.meter_circle_uv_inner_circle_loading').style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${degreelevel}deg, var(--weather-text) 0deg);`
         let HumidityMetertwo = document.getElementsByClassName('.meter_circle_uv_inner_circle_loading')[0].style.height = '50%'
-        let HumidityTitle = document.getElementById('humidity_level_title').innerText = title;
-        HumidityMeter.style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${degreelevel}deg, var(--weather-text) 0deg);`;
-        HumidityMeter.style.transform = `rotate(${degreelevel}deg)`;
-        HumidityTitle.style.transform = 'rotate(45deg)';
+        // let HumidityTitle = document.getElementById('humidity_level_title').innerText = title;
+        HumidityMeter.style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${humidityLevel}deg, var(--weather-text) 0deg);`;
+        // HumidityMeter.style.transform = `rotate(${degreelevel}deg)`;
+        // HumidityTitle.style.transform = 'rotate(45deg)';
 
     }
 
