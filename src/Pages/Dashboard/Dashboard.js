@@ -557,7 +557,7 @@ const Dashboard = () => {
                     
                 }
 
-                weathericon = 'drizzle'
+                weathericon = <img alt='weather icon' src={drizzle} />
                 
                 
             }else if(timeOfDay === 'night'){
@@ -584,7 +584,7 @@ const Dashboard = () => {
 
                 }
 
-                weathericon = 'drizzleNight'
+                weathericon = <img alt='weather icon' src={drizzleNight} />
 
             }
 
@@ -595,25 +595,25 @@ const Dashboard = () => {
             if (timeOfDay === 'day'){
 
                 if (des === 'thunderstorm with light rain'){
-                    weathericon = 'thunderstroms'
+                    weathericon = <img alt='weather icon' src={thunderstroms} />
                 }else if(des === 'thunderstorm with rain'){
-                    weathericon = 'thunderstroms'
+                    weathericon = <img alt='weather icon' src={thunderstroms} />
                 }else if(des === 'thunderstorm with heavy rain'){
-                    weathericon = 'thunderstroms'
+                    weathericon = <img alt='weather icon' src={thunderstroms} />
                 }else if(des === 'light thunderstorm'){
-                    weathericon = 'stormy'
+                    weathericon = <img alt='weather icon' src={stormy} />
                 }else if(des === 'thunderstorm'){
-                    weathericon = 'lightning'
+                    weathericon = <img alt='weather icon' src={lightning} />
                 }else if(des === 'heavy thunderstorm'){
-                    weathericon = 'lightning'
+                    weathericon = <img alt='weather icon' src={lightning} />
                 }else if(des === 'ragged thunderstorm'){
-                    weathericon = 'lightning'
+                    weathericon = <img alt='weather icon' src={lightning} />
                 }else if(des === 'thunderstorm with light drizzle'){
-                    weathericon = 'thunderstroms'
+                    weathericon = <img alt='weather icon' src={thunderstroms} />
                 }else if(des === 'thunderstorm with drizzle'){
-                    weathericon = 'thunderstroms'
+                    weathericon = <img alt='weather icon' src={thunderstroms} />
                 }else if(des === 'thunderstorm with heavy drizzle'){
-                    weathericon = 'thunderstroms'
+                    weathericon = <img alt='weather icon' src={thunderstroms} />
                 }
 
                 
@@ -621,25 +621,25 @@ const Dashboard = () => {
             }else if(timeOfDay === 'night'){
 
                 if (des === 'thunderstorm with light rain'){
-                    weathericon = 'thunderstromsSunnyNight'
+                    weathericon = <img alt='weather icon' src={thunderstromsSunnyNight} />
                 }else if(des === 'thunderstorm with rain'){
-                    weathericon = 'thunderstromsSunnyNight'
+                    weathericon = <img alt='weather icon' src={thunderstromsSunnyNight} />
                 }else if(des === 'thunderstorm with heavy rain'){
-                    weathericon = 'thunderstromsSunnyNight'
+                    weathericon = <img alt='weather icon' src={thunderstromsSunnyNight} />
                 }else if(des === 'light thunderstorm'){
-                    weathericon = 'stormy'
+                    weathericon = <img alt='weather icon' src={stormy} />
                 }else if(des === 'thunderstorm'){
-                    weathericon = 'lightning'
+                    weathericon = <img alt='weather icon' src={lightning} />
                 }else if(des === 'heavy thunderstorm'){
-                    weathericon = 'lightning'
+                    weathericon = <img alt='weather icon' src={lightning} />
                 }else if(des === 'ragged thunderstorm'){
-                    weathericon = 'lightning'
+                    weathericon = <img alt='weather icon' src={lightning} />
                 }else if(des === 'thunderstorm with light drizzle'){
-                    weathericon = 'thunderstromsSunnyNight'
+                    weathericon = <img alt='weather icon' src={thunderstromsSunnyNight} />
                 }else if(des === 'thunderstorm with drizzle'){
-                    weathericon = 'thunderstromsSunnyNight'
+                    weathericon = <img alt='weather icon' src={thunderstromsSunnyNight} />
                 }else if(des === 'thunderstorm with heavy drizzle'){
-                    weathericon = 'thunderstromsSunnyNight'
+                    weathericon = <img alt='weather icon' src={thunderstromsSunnyNight} />
                 }
 
             }
@@ -670,7 +670,7 @@ const Dashboard = () => {
 
                 }
 
-                weathericon = 'drizzleSunny'
+                weathericon = <img alt='weather icon' src={drizzleSunny} />
                 
             }else if(timeOfDay === 'night'){
 
@@ -694,7 +694,7 @@ const Dashboard = () => {
 
                 }
 
-                weathericon = 'drizzleNight'
+                weathericon = <img alt='weather icon' src={drizzleNight} />
 
             }
 
@@ -705,57 +705,57 @@ const Dashboard = () => {
             if (timeOfDay === 'day'){
 
                 if (des === 'light snow'){
-                    weathericon = 'snowFlurries'
+                    weathericon = <img alt='weather icon' src={snowFlurries} />
                 }else if(des === 'drizzle'){
-                    weathericon = 'snowFlurries'
+                    weathericon = <img alt='weather icon' src={snowFlurries} />
                 }else if(des === 'Snow'){
-                    weathericon = 'snow'
+                    weathericon = <img alt='weather icon' src={snow} />
                 }else if(des === 'Heavy snow'){
-                    weathericon = 'snow'
+                    weathericon = <img alt='weather icon' src={snow} />
                 }else if(des === 'Sleet'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Light shower sleet'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Shower sleet'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Light rain and snow'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Rain and snow'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Light shower snow'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Shower snow'){
-                    weathericon = 'snow'
+                    weathericon = <img alt='weather icon' src={snow} />
                 }else if(des === 'Heavy shower snow'){
-                    weathericon = 'snow'
+                    weathericon = <img alt='weather icon' src={snow} />
                 }
                 
             }else if(timeOfDay === 'night'){
 
                 if (des === 'light snow'){
-                    weathericon = 'snowFlurries'
+                    weathericon = <img alt='weather icon' src={snowFlurries} />
                 }else if(des === 'drizzle'){
-                    weathericon = 'snowFlurries'
+                    weathericon = <img alt='weather icon' src={snowFlurries} />
                 }else if(des === 'Snow'){
-                    weathericon = 'snow'
+                    weathericon = <img alt='weather icon' src={snow} />
                 }else if(des === 'Heavy snow'){
-                    weathericon = 'snow'
+                    weathericon = <img alt='weather icon' src={snow} />
                 }else if(des === 'Sleet'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Light shower sleet'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Shower sleet'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Light rain and snow'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Rain and snow'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Light shower snow'){
-                    weathericon = 'sleet'
+                    weathericon = <img alt='weather icon' src={sleet} />
                 }else if(des === 'Shower snow'){
-                    weathericon = 'snow'
+                    weathericon = <img alt='weather icon' src={snow} />
                 }else if(des === 'Heavy shower snow'){
-                    weathericon = 'snow'
+                    weathericon = <img alt='weather icon' src={snow} />
                 }
 
             }
@@ -767,14 +767,21 @@ const Dashboard = () => {
             if (timeOfDay === 'day'){
 
                 if (des === 'clear sky'){
-                    weathericon = 'clearCloudy'
+                    weathericon = <img alt='weather icon' src={clearCloudy} />
+                }else if (des === 'sky is clear'){
+                    weathericon = <img alt='weather icon' src={clearCloudy} />
                 }
+
+                weathericon = <img alt='weather icon' src={clearCloudy} />
                 
             }else if(timeOfDay === 'night'){
 
                 if (des === 'clear sky'){
-                    weathericon = 'clearCloudyNight'
+                    weathericon = <img alt='weather icon' src={clearCloudyNight} />
                 }
+
+                weathericon = <img alt='weather icon' src={clearCloudy} />
+                
 
             }
 
@@ -785,25 +792,26 @@ const Dashboard = () => {
             if (timeOfDay === 'day'){
 
                 if (des === 'few clouds'){
-                    weathericon = 'cloudy'
+                    // weathericon = 'cloudy'
+                    weathericon = <img alt='weather icon' src={cloudy}  />
                 }else if(des === 'scattered clouds'){
-                    weathericon = 'cloudy'
+                    weathericon = <img alt='weather icon' src={cloudy}  />
                 }else if(des === 'broken clouds'){
-                    weathericon = 'partlyCloudy'
+                    weathericon = <img alt='weather icon' src={partlyCloudy}  />
                 }else if(des === 'overcast clouds'){
-                    weathericon = 'partlyCloudy'
+                    weathericon = <img alt='weather icon' src={partlyCloudy}  />
                 }
                 
             }else if(timeOfDay === 'night'){
 
                 if (des === 'few clouds'){
-                    weathericon = 'mostlyCloudyNight'
+                    weathericon = <img alt='weather icon' src={mostlyCloudyNight}  />
                 }else if(des === 'scattered clouds'){
-                    weathericon = 'mostlyCloudyNight'
+                    weathericon = <img alt='weather icon' src={mostlyCloudyNight}  />
                 }else if(des === 'broken clouds'){
-                    weathericon = 'mostlyCloudyNight'
+                    weathericon = <img alt='weather icon' src={mostlyCloudyNight}  />
                 }else if(des === 'overcast clouds'){
-                    weathericon = 'mostlyCloudyNight'
+                    weathericon = <img alt='weather icon' src={mostlyCloudyNight}  />
                 }
 
             }
@@ -818,7 +826,7 @@ const Dashboard = () => {
 
             }
 
-            weathericon = 'fog'
+            weathericon = <img alt='weather icon' src={fog} />
             return weathericon
 
         }else if(weather === 'Smoke'){
@@ -840,9 +848,9 @@ const Dashboard = () => {
         }else if(weather === 'Dust'){
             
             if (timeOfDay === 'day'){
-                weathericon = 'windy'
+                weathericon = <img alt='weather icon' src={windy} />
             }else if(timeOfDay === 'night'){
-                weathericon = 'windy'
+                weathericon = <img alt='weather icon' src={windy} />
             }
 
             return weathericon
@@ -855,7 +863,7 @@ const Dashboard = () => {
 
             }
 
-            weathericon = 'fog'
+            weathericon = <img alt='weather icon' src={fog} />
             return weathericon
 
         }else if(weather === 'Sand'){
@@ -885,9 +893,9 @@ const Dashboard = () => {
         }else if(weather === 'Tornado'){
             
             if (timeOfDay === 'day'){
-                weathericon = 'tornado'
+                weathericon = <img alt='weather icon' src={tornado} />
             }else if(timeOfDay === 'night'){
-                weathericon = 'tornado'
+                weathericon = <img alt='weather icon' src={tornado} />
             }
 
             return weathericon
@@ -1007,7 +1015,7 @@ const Dashboard = () => {
                                         </div>
                                     </div>
 
-                                        <Stat currentTemp={currentTemp} currentWeather={currentWeather} currentWeatherType={currentWeatherType} currentUnits={currentUnits} currentWeatherIcon={currentWeatherIcon} changeWeatherImg={changeWeatherImg} timeOfDay={timeOfDay}/>
+                                        <Stat currentTemp={currentTemp} currentWeather={currentWeather} currentWeatherType={currentWeatherType} currentUnits={currentUnits} changeWeatherImg={changeWeatherImg} timeOfDay={timeOfDay}/>
                                     
                                     <div className='display_board_details_others'>
                                         <div className='display_board_details_others_pressure'>
@@ -1192,6 +1200,8 @@ const Dashboard = () => {
                                             forcastWeatherHours={forcastWeatherHours}
                                             currentUnits = {currentUnits}
                                             covertTimeToUTC = {covertTimeToUTC}
+                                            changeWeatherImg={changeWeatherImg} 
+                                            timeOfDay={timeOfDay}
                                             />
                                             );
                                         })
@@ -1209,6 +1219,8 @@ const Dashboard = () => {
                                             forcastDaily = {forcastDaily}
                                             currentUnits = {currentUnits}
                                             getTheDay = {getTheDay}
+                                            changeWeatherImg={changeWeatherImg} 
+                                            timeOfDay={timeOfDay}
                                         />
                                     );
                                 })

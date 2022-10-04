@@ -23,20 +23,19 @@ import thunderstroms from '../../Assets/thunderstroms.svg';
 import tornado from '../../Assets/tornado.svg';
 import windy from '../../Assets/windy.svg';
 
-const Stat = ({currentTemp, currentWeather ,currentWeatherType, currentUnits, currentWeatherIcon, changeWeatherImg, timeOfDay}) => {
+const Stat = ({currentTemp, currentWeather ,currentWeatherType, currentUnits, changeWeatherImg, timeOfDay}) => {
 
     
-    // currentWeather.main.temp === "" ? temp = currentWeather.main.temp : temp = 0
     let icon = changeWeatherImg(timeOfDay, currentWeatherType.main, currentWeatherType.description)
 
-    console.log(icon)
     return(
         <div className='display_board_details_temp_and_weather'>
             <div className='display_board_details_temp'>
                 <p>{currentTemp}{currentUnits[0]}</p>
-                <img alt='weather icon' src={icon}  />
+                {/* <img alt='weather icon' src={icon}  /> */}
+                {icon}
             </div>
-            {/* <p className='display_board_details_weather_text'></p>   */}
+            <p className='display_board_details_weather_text'>{currentWeatherType.description}</p>  
         </div>
     );
 
