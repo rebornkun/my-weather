@@ -1,0 +1,46 @@
+.today_forecast_hourly_box_normal{
+    width: 3.8rem;
+    height: 6rem;
+    padding: 0.5rem;
+    /* box-shadow: 2px 2px 5px var(--line-tint); */
+    background: var(--weather-text);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.today_forecast_hourly_box_normal.special{
+    background: var(--logo);
+}
+
+.today_forecast_hourly_box_normal:hover{
+    transform: rotate(10deg);
+    transition: all 0.3s ease;
+}
+
+.today_forecast_hourly_box_time_nom{
+    width: 100%;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--nom-text);
+}
+.today_forecast_hourly_box_time_nom.special{
+    color: var(--dark-text);
+}
+.today_forecast_hourly_box img{
+    filter: drop-shadow(2px 4px 6px var(--dark-text));
+}
+
+.today_forecast_hourly_box_temp_nom{
+    width: 100%;
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--nom-text);
+}
+.today_forecast_hourly_box_temp_nom.special{
+    color: var(--dark-text);
+}

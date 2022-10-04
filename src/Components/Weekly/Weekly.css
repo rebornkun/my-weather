@@ -40,6 +40,13 @@
     font-size: 1rem;
     color: var(--dark-text);
     font-weight: 700;
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 
 .weekly_weather_icon{

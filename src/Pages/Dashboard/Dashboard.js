@@ -1,11 +1,34 @@
 import SearchBox from '../../Components/SearchBox/SearchBox';
 import Weekly from '../../Components/Weekly/Weekly';
-import clearCloudy from '../../Assets/clear-cloudy.svg';
 import night from '../../Assets/night.svg';
 import './Dashboard.css'
 import { useEffect, useState } from 'react';
 import Choose from '../../Components/Choose/Choose';
 import Stat from '../../Components/Stats/Stat';
+import HourlyBox from '../../Components/HourlyBox/HourlyBox';
+
+//weather icons
+import clearCloudy from '../../Assets/clear-cloudy.svg';
+import clearCloudyNight from '../../Assets/clear-cloudy-night.svg';
+import cloudy from '../../Assets/cloudy.svg';
+import drizzleNight from '../../Assets/drizzle-night.svg';
+import drizzleSunny from '../../Assets/drizzle-sunny.svg';
+import drizzle from '../../Assets/drizzle.svg';
+import fog from '../../Assets/fog.svg';
+import hail from '../../Assets/hail.svg';
+import lightning from '../../Assets/lightning.svg';
+import mostlyCloudyNight from '../../Assets/mostly-cloudy-night.svg';
+import partlyCloudy from '../../Assets/partly-cloudy.svg';
+import sleet from '../../Assets/sleet.svg';
+import snowFlurries from '../../Assets/snow-flurries.svg';
+import snow from '../../Assets/snow.svg';
+import stormy from '../../Assets/stormy.svg';
+import thunderstromsTwo from '../../Assets/thunderstroms-two.svg';
+import thunderstromsSunnyNight from '../../Assets/thunderstroms-sunny-night.svg';
+import thunderstromsSunny from '../../Assets/thunderstroms-sunny.svg';
+import thunderstroms from '../../Assets/thunderstroms.svg';
+import tornado from '../../Assets/tornado.svg';
+import windy from '../../Assets/windy.svg';
 
 
 const Dashboard = () => {
@@ -30,12 +53,14 @@ const Dashboard = () => {
     const [timeToSunSet, SetTimeToSunSet] = useState('')
     const [timeOfDay, SetTimeOfDay] = useState('')
     const [population, SetPopulation] = useState('')
-    const [forcastDaily, SetForcastDaily] = useState({})
     const [morningTemp, SetMorningTemp] = useState('')
     const [afternoonTemp, SetAfternoonTemp] = useState('')
     const [eveningTemp, SetEveningTemp] = useState('')
     const [nightTemp, SetNightTemp] = useState('')
-    const [dailyTemp, SetDailyTemp] = useState([])
+    const [forcastDaily, SetForcastDaily] = useState({})
+    const [forcastForTheWeek, SetForcastForTheWeek] = useState([])
+    const [forcastWeatherHours, SetForcastWeatherHours] = useState({})
+    const [forcastWeatherThreeHours, SetForcastWeatherThreeHours] = useState([])
 
     //local variables to pass to state
     let currentWeatherCountry;
@@ -47,7 +72,8 @@ const Dashboard = () => {
     let currentWeatherTimeZone;
     let AM_or_PM; 
     let windDirection; 
-    let humidityLevel; 
+    let humidityDegree; 
+    let humidityLevel;  
 
     // units
     let TempUnit 
@@ -82,8 +108,10 @@ const Dashboard = () => {
             console.log('fetch')
             searchboxvalue = ''
             const processedRawGeo = await rawGeo.json()
-                    console.log('processedRawGeo: ', processedRawGeo.length)
+                    // console.log('processedRawGeo: ', processedRawGeo.length)
                 if (processedRawGeo.length > 1){
+
+                    //assign id to each object
                     const processedRawGeoWID = processedRawGeo.map((olocation , i) => {
                         return Object.assign(olocation, {id: i});
                     })
@@ -159,12 +187,22 @@ const Dashboard = () => {
         if (lat.length === 0 || lon.length === 0){
             alert('no co-ordinates')
         }else{
-            const rawForWeather = await fetch(`${url}data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}&cnt=${5}`)
+            const rawForWeather = await fetch(`${url}data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}&cnt=${4}`)
             // console.log('fetching')
-            const processedRawFurWeather = await rawForWeather.json()
-            console.log('forcast: ', processedRawFurWeather)
+            const processedRawForWeather = await rawForWeather.json()
+            SetPopulation(processedRawForWeather.city.population)
+            SetForcastWeatherHours(processedRawForWeather)
+            let processedRawForWeatherList = processedRawForWeather.list
+            console.log('forcast3hrs: ', processedRawForWeather)
+            console.log('forcast3hrsList: ', processedRawForWeatherList)
+            console.log('forcast3hrsConverted: ', covertTimeToUTC(processedRawForWeatherList[0].dt))
             
-            SetPopulation(processedRawFurWeather.city.population)
+            //assign id to each object
+            const processedRawForWeatherListID = processedRawForWeatherList.map((forcast , i) => {
+                return Object.assign(forcast, {id: i});
+            })
+
+            SetForcastWeatherThreeHours(processedRawForWeatherListID);
         }
     }
 
@@ -176,7 +214,6 @@ const Dashboard = () => {
 
             // console.log('fetching')
             const processedRawFurWeatherDaily = await rawForWeatherDaily.json()
-            // console.log('Forcast Daily: ', processedRawFurWeatherDaily)
             let morning = processedRawFurWeatherDaily.list[0].temp.morn.toFixed(0)
             let afternoon = processedRawFurWeatherDaily.list[0].temp.day.toFixed(0)
             let evening = processedRawFurWeatherDaily.list[0].temp.night.toFixed(0)
@@ -192,6 +229,12 @@ const Dashboard = () => {
             slopeVars.push(Number(evening))
             slopeVars.push(Number(night))
             alignslope(slopeVars, slopeVars) 
+            let processeddailylist = processedRawFurWeatherDaily.list
+            const finalProcessedDailyList = processeddailylist.map((day , i) => {
+                return Object.assign(day, {id: i});
+            })
+            SetForcastForTheWeek(finalProcessedDailyList)
+            console.log('Forcast Daily: ', processedRawFurWeatherDaily)
             // SetDailyTemp([morning, afternoon, evening, night])
 
         }
@@ -266,6 +309,70 @@ const Dashboard = () => {
         // SetCurrentTime(`${hours}:${minutes}${AM_or_PM}`) 
     }
 
+    //get the day of forecast for wach day of the week
+    const getTheDay = (timestamp) => {
+
+        var date = new Date(timestamp * 1000);
+        var month = date.getMonth() + 1;
+        var day = date.getDay();
+        var caldate = date.getDate();
+        var year = date.getFullYear();
+        let dayInEnglish
+        let monthInEnglish
+
+        if (day === 0){
+            dayInEnglish = 'Sunday' 
+        }else if (day === 1){
+            dayInEnglish = 'Monday'
+        }else if (day === 2){
+            dayInEnglish = 'Tuesday'
+        }else if (day === 3){
+            dayInEnglish = 'Wednesday'
+        }else if (day === 4){
+            dayInEnglish = 'Thursday'
+        }else if (day === 5){
+            dayInEnglish = 'Friday'
+        }else if (day === 6){
+            dayInEnglish = 'Saturday'
+        }
+
+        if (month === 1){
+            monthInEnglish = 'Jan' 
+        }else if (month === 2){
+            monthInEnglish = 'Feb'
+        }else if (month === 3){
+            monthInEnglish = 'Mar'
+        }else if (month === 4){
+            monthInEnglish = 'Apr'
+        }else if (month === 5){
+            monthInEnglish = 'May'
+        }else if (month === 6){
+            monthInEnglish = 'Jun'
+        }else if (month === 7){
+            monthInEnglish = 'Jul'
+        }else if (month === 8){
+            monthInEnglish = 'Aug'
+        }else if (month === 9){
+            monthInEnglish = 'Sep'
+        }else if (month === 10){
+            monthInEnglish = 'Oct'
+        }else if (month === 11){
+            monthInEnglish = 'Nov'
+        }else if (month === 12){
+            monthInEnglish = 'Dec'
+        }
+
+
+
+        let formattedTimeArray = [];
+        formattedTimeArray.push(dayInEnglish)
+        formattedTimeArray.push(monthInEnglish)
+        formattedTimeArray.push(caldate)
+        formattedTimeArray.push(year)
+        return formattedTimeArray;
+
+    }
+
     //function to shorten chains due to not been able to pass directly
     //also shortens the temp
     const shorten_chain = (country, temp, pres, wind, humidity) => {
@@ -283,7 +390,7 @@ const Dashboard = () => {
         SetCurrentHumidity(humidity)
     }
 
-    //function to check time of day
+    //function to check and set time of day
     const Checktimeofday = (CurrentTimeUnix, sunriseunix, sunsetunix) =>{
 
         console.log('checking time of day')
@@ -292,27 +399,21 @@ const Dashboard = () => {
 
         if (sunriseunix < CurrentTimeUnix && sunsetunix > CurrentTimeUnix){
             SetTimeOfDay('day')
-            // console.log('setting time of day to day')
         }else if (sunriseunix > CurrentTimeUnix && sunsetunix < CurrentTimeUnix){
             SetTimeOfDay('night')
-            // console.log('setting time of day to night')
         }else if (sunriseunix > CurrentTimeUnix && sunsetunix > CurrentTimeUnix){
 
             if (sunrisediff < sunsetdiff){
                 SetTimeOfDay('night')
-                // console.log('setting time of day to night')
             }else{
                 SetTimeOfDay('day')
-                // console.log('setting time of day to day')
             }
         }else if (sunriseunix < CurrentTimeUnix && sunsetunix < CurrentTimeUnix){
 
             if (sunrisediff < sunsetdiff){
                 SetTimeOfDay('night')
-                // console.log('setting time of day to night')
             }else{
                 SetTimeOfDay('day')
-                // console.log('setting time of day to day')
             }
         }
 
@@ -339,26 +440,13 @@ const Dashboard = () => {
     }
 
     const handleHumidityMeter = (deg) => {
+        humidityDegree = deg
         humidityLevel = 3.6 * deg
-        let title
-        if (deg < 40){
-            title = 'Low'
-        }else if(deg > 40 && deg < 60){
-            title = 'Mid'
-        }else(
-            title = 'High'
-        )
-        console.log('humidityLevel: ', humidityLevel)
         let HumidityMeter = document.getElementById('humidity_level_loading')
-        // let HumidityMetertwo = document.getElementsByClassName('.meter_circle_uv_inner_circle_loading').style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${degreelevel}deg, var(--weather-text) 0deg);`
-        let HumidityMetertwo = document.getElementsByClassName('.meter_circle_uv_inner_circle_loading')[0].style.height = '50%'
-        // let HumidityTitle = document.getElementById('humidity_level_title').innerText = title;
-        HumidityMeter.style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${humidityLevel}deg, var(--weather-text) 0deg);`;
-        // HumidityMeter.style.transform = `rotate(${degreelevel}deg)`;
-        // HumidityTitle.style.transform = 'rotate(45deg)';
-
+        HumidityMeter.style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${humidityLevel}deg, var(--weather-text) 0deg)`;
     }
-
+    
+    //function to align temperature scale
     const alignslope = (dailyTempToBeSorted) => {
         let dailyarray = []
         dailyarray.push(dailyTempToBeSorted[0])
@@ -425,6 +513,30 @@ const Dashboard = () => {
         let nightPoint = document.getElementById('night').style.bottom = `${nightTempLevel}rem`
     }
 
+    //check for weather type and change icon base on that
+    const changeWeatherImg = (timeOfDay, weather, des) => {
+
+        let Weatherimage
+        let WeatherBackground = document.getElementById('weather_board')
+
+        if (weather === 'Rain'){
+            WeatherBackground.style.background = ''
+
+            if (timeOfDay === 'day'){
+                if (des === 'moderate'){
+    
+                }
+                
+            }else if(timeOfDay === 'day'){
+
+            }
+
+        }else if(weather === 'Cloudy'){
+
+        }
+
+    }
+
     console.log('currentWeather: ', currentWeather)
     console.log('currentWeathertype: ', currentWeatherType)
     console.log('currentTemp ',currentTemp)
@@ -438,6 +550,8 @@ const Dashboard = () => {
     console.log('afternoonTemp: ', afternoonTemp)
     console.log('eveningTemp: ', eveningTemp)
     console.log('nightTemp: ', nightTemp)
+    console.log('ForcastForTheWeek: ', forcastForTheWeek)
+    console.log('ForcastWeatherHours: ', forcastWeatherHours)
 
 
     return(
@@ -513,7 +627,7 @@ const Dashboard = () => {
 
 
                     <div className='dashboard_firstpart_rest'>
-                        <div className='dashboard_firstpart_rest_top'>
+                        <div id='weather_board' className='dashboard_firstpart_rest_top'>
                             <div className='display_board'>
                                 <div className='display_board_details'>
                                     <div className='display_board_details_location_and_date'>
@@ -686,10 +800,10 @@ const Dashboard = () => {
                                     </div>
                                     <div className='meter'>
                                         <div className='meter_circle no_border'>
-                                            <div id='humidity_level_loading' className='meter_circle_uv_inner_circle_loading' style={{background: `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) 50deg, var(--weather-text) 0deg);`}}>
+                                            <div id='humidity_level_loading' className='meter_circle_uv_inner_circle_loading' >
                                             </div>
                                             <div className='meter_circle_uv_last_circle'>
-                                                <p id='humity_level_title' className='humity_level_title'>Low</p>
+                                                <p id='humity_level_title' className='humity_level_title'>{humidityDegree < 40 ? "Low" : humidityDegree > 40 || humidityDegree < 60 ? "Mid" : "High"}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -708,37 +822,36 @@ const Dashboard = () => {
                             <p className='today_forecast_hourly_title'>Today</p>
                             <div className='today_forecast_hourly_box_container'>
                                 <div className='today_forecast_hourly_box_container_row'>
-                                    <div className='today_forecast_hourly_box'>
-                                        <p className='today_forecast_hourly_box_time'>Now</p>
-                                        <img src={clearCloudy} alt="weather icon"/>
-                                        <p className='today_forecast_hourly_box_temp'>{currentTemp}{currentUnits[0]}</p>
-                                    </div>
-                                    <div className='today_forecast_hourly_box_normal'>
-                                        <p className='today_forecast_hourly_box_time_nom'>01PM</p>
-                                        <img src={clearCloudy} alt="weather icon"/>
-                                        <p className='today_forecast_hourly_box_temp_nom'>16{currentUnits[0]}</p>
-                                    </div>
-                                    <div className='today_forecast_hourly_box_normal'>
-                                        <p className='today_forecast_hourly_box_time_nom'>02PM</p>
-                                        <img src={clearCloudy} alt="weather icon"/>
-                                        <p className='today_forecast_hourly_box_temp_nom'>15{currentUnits[0]}</p>
-                                    </div>
-                                    <div className='today_forecast_hourly_box_normal'>
-                                        <p className='today_forecast_hourly_box_time_nom'>03PM</p>
-                                        <img src={clearCloudy} alt="weather icon"/>
-                                        <p className='today_forecast_hourly_box_temp_nom'>15{currentUnits[0]}</p>
-                                    </div>
+                                    {
+                                        forcastWeatherThreeHours.map((forThreeHours, i) => {
+                                            return (
+                                            <HourlyBox 
+                                            key={i}
+                                            forThreeHours={forThreeHours}
+                                            forcastWeatherHours={forcastWeatherHours}
+                                            currentUnits = {currentUnits}
+                                            covertTimeToUTC = {covertTimeToUTC}
+                                            />
+                                            );
+                                        })
+                                    }
                                 </div>
                             </div>
                         </div>
                         <div className='today_forecast_weekly'>
-                            <Weekly />
-                            <Weekly />
-                            <Weekly />
-                            <Weekly />
-                            <Weekly />
-                            <Weekly />
-                            <Weekly />
+                            {
+                                forcastForTheWeek.map((fortheday, i) => {
+                                    return (
+                                        <Weekly 
+                                            key = {i}
+                                            fortheday = {fortheday}
+                                            forcastDaily = {forcastDaily}
+                                            currentUnits = {currentUnits}
+                                            getTheDay = {getTheDay}
+                                        />
+                                    );
+                                })
+                            }
                         </div>
                     </div>
                 </div>
