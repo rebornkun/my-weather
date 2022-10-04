@@ -61,6 +61,7 @@ const Dashboard = () => {
     const [forcastForTheWeek, SetForcastForTheWeek] = useState([])
     const [forcastWeatherHours, SetForcastWeatherHours] = useState({})
     const [forcastWeatherThreeHours, SetForcastWeatherThreeHours] = useState([])
+    const [currentWeatherIcon, setCurrentWeatherIcon] = useState('')
 
     //local variables to pass to state
     let currentWeatherCountry;
@@ -74,6 +75,7 @@ const Dashboard = () => {
     let windDirection; 
     let humidityDegree; 
     let humidityLevel;  
+    let currentWeatherImage
 
     // units
     let TempUnit 
@@ -178,8 +180,14 @@ const Dashboard = () => {
             shorten_chain(currentWeatherCountry, currentWeatherTemp, currentWeatherPressure, currentWeatherWindSpeed, currentWeatherHumidity)
             handleWindDirectionMeter(processedRawCurWeather.wind.deg)
             handleHumidityMeter(processedRawCurWeather.main.humidity)
+            currentWeatherImage = changeWeatherImg(timeOfDay, processedRawCurWeather.weather[0].main, processedRawCurWeather.weather[0].description )
+            setCurrentWeatherIcon(currentWeatherImage)
+            console.log('timeOfDay: ', timeOfDay)
+            console.log('main: ', processedRawCurWeather.weather[0].main)
+            console.log('des: ', processedRawCurWeather.weather[0].description)
+            console.log('currentWeatherImage: ', currentWeatherImage)
         }
-        // console.log('CurrentWeatherTime: ', currentWeatherTime)
+        
 
     }
 
@@ -460,8 +468,10 @@ const Dashboard = () => {
 
         let diffHighesttemp_n_Lowesttemp = highestdailytemp - lowestdailytemp
 
-        if (diffHighesttemp_n_Lowesttemp < 5){
-            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 4  //share the slope to sections
+        if (diffHighesttemp_n_Lowesttemp < 3){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp  //share the slope to sections
+        }else if(diffHighesttemp_n_Lowesttemp >= 3 && diffHighesttemp_n_Lowesttemp < 5){
+            diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 2  //share the slope to sections
         }else if(diffHighesttemp_n_Lowesttemp >= 5 && diffHighesttemp_n_Lowesttemp < 10){
             diffHighesttemp_n_Lowesttemp = diffHighesttemp_n_Lowesttemp / 20  //share the slope to sections
         }else if(diffHighesttemp_n_Lowesttemp >= 10 && diffHighesttemp_n_Lowesttemp < 15){
@@ -516,22 +526,371 @@ const Dashboard = () => {
     //check for weather type and change icon base on that
     const changeWeatherImg = (timeOfDay, weather, des) => {
 
-        let Weatherimage
+        let weathericon
         let WeatherBackground = document.getElementById('weather_board')
 
         if (weather === 'Rain'){
-            WeatherBackground.style.background = ''
+            // change video to rain 
+            // WeatherBackground.style.background = ''
 
             if (timeOfDay === 'day'){
-                if (des === 'moderate'){
-    
+
+                if (des === 'light rain'){
+                    
+                }else if(des === 'moderate rain'){
+                    
+                }else if(des === 'heavy intensity rain'){
+                    
+                }else if(des === 'very heavy rain'){
+                    
+                }else if(des === 'extreme rain'){
+                    
+                }else if(des === 'freezing rain'){
+                    
+                }else if(des === 'light intensity shower rain'){
+                    
+                }else if(des === 'shower rain'){
+                    
+                }else if(des === 'heavy intensity shower rain'){
+                    
+                }else if(des === 'ragged shower rain'){
+                    
                 }
+
+                weathericon = 'drizzle'
                 
-            }else if(timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+                if (des === 'light rain'){
+                    
+                }else if(des === 'moderate rain'){
+                    
+                }else if(des === 'heavy intensity rain'){
+
+                }else if(des === 'very heavy rain'){
+
+                }else if(des === 'extreme rain'){
+
+                }else if(des === 'freezing rain'){
+
+                }else if(des === 'light intensity shower rain'){
+
+                }else if(des === 'shower rain'){
+
+                }else if(des === 'heavy intensity shower rain'){
+
+                }else if(des === 'ragged shower rain'){
+
+                }
+
+                weathericon = 'drizzleNight'
 
             }
 
-        }else if(weather === 'Cloudy'){
+            return weathericon
+
+        }else if(weather === 'Thunderstorm'){
+
+            if (timeOfDay === 'day'){
+
+                if (des === 'thunderstorm with light rain'){
+                    weathericon = 'thunderstroms'
+                }else if(des === 'thunderstorm with rain'){
+                    weathericon = 'thunderstroms'
+                }else if(des === 'thunderstorm with heavy rain'){
+                    weathericon = 'thunderstroms'
+                }else if(des === 'light thunderstorm'){
+                    weathericon = 'stormy'
+                }else if(des === 'thunderstorm'){
+                    weathericon = 'lightning'
+                }else if(des === 'heavy thunderstorm'){
+                    weathericon = 'lightning'
+                }else if(des === 'ragged thunderstorm'){
+                    weathericon = 'lightning'
+                }else if(des === 'thunderstorm with light drizzle'){
+                    weathericon = 'thunderstroms'
+                }else if(des === 'thunderstorm with drizzle'){
+                    weathericon = 'thunderstroms'
+                }else if(des === 'thunderstorm with heavy drizzle'){
+                    weathericon = 'thunderstroms'
+                }
+
+                
+                
+            }else if(timeOfDay === 'night'){
+
+                if (des === 'thunderstorm with light rain'){
+                    weathericon = 'thunderstromsSunnyNight'
+                }else if(des === 'thunderstorm with rain'){
+                    weathericon = 'thunderstromsSunnyNight'
+                }else if(des === 'thunderstorm with heavy rain'){
+                    weathericon = 'thunderstromsSunnyNight'
+                }else if(des === 'light thunderstorm'){
+                    weathericon = 'stormy'
+                }else if(des === 'thunderstorm'){
+                    weathericon = 'lightning'
+                }else if(des === 'heavy thunderstorm'){
+                    weathericon = 'lightning'
+                }else if(des === 'ragged thunderstorm'){
+                    weathericon = 'lightning'
+                }else if(des === 'thunderstorm with light drizzle'){
+                    weathericon = 'thunderstromsSunnyNight'
+                }else if(des === 'thunderstorm with drizzle'){
+                    weathericon = 'thunderstromsSunnyNight'
+                }else if(des === 'thunderstorm with heavy drizzle'){
+                    weathericon = 'thunderstromsSunnyNight'
+                }
+
+            }
+
+            return weathericon
+
+        }else if(weather === 'Drizzle'){
+            
+            if (timeOfDay === 'day'){
+
+                if (des === 'light intensity drizzle'){
+                    
+                }else if(des === 'drizzle'){
+                    
+                }else if(des === 'heavy intensity drizzle'){
+                    
+                }else if(des === 'light intensity drizzle rain'){
+                    
+                }else if(des === 'drizzle rain'){
+                    
+                }else if(des === 'heavy intensity drizzle rain'){
+                    
+                }else if(des === 'shower rain and drizzle'){
+                    
+                }else if(des === 'heavy shower rain and drizzle'){
+
+                }else if(des === 'shower drizzle'){
+
+                }
+
+                weathericon = 'drizzleSunny'
+                
+            }else if(timeOfDay === 'night'){
+
+                if (des === 'light intensity drizzle'){
+                    
+                }else if(des === 'drizzle'){
+                    
+                }else if(des === 'heavy intensity drizzle'){
+                    
+                }else if(des === 'light intensity drizzle rain'){
+                    
+                }else if(des === 'drizzle rain'){
+                    
+                }else if(des === 'heavy intensity drizzle rain'){
+                    
+                }else if(des === 'shower rain and drizzle'){
+                    
+                }else if(des === 'heavy shower rain and drizzle'){
+
+                }else if(des === 'shower drizzle'){
+
+                }
+
+                weathericon = 'drizzleNight'
+
+            }
+
+            return weathericon
+
+        }else if(weather === 'Snow'){
+            
+            if (timeOfDay === 'day'){
+
+                if (des === 'light snow'){
+                    weathericon = 'snowFlurries'
+                }else if(des === 'drizzle'){
+                    weathericon = 'snowFlurries'
+                }else if(des === 'Snow'){
+                    weathericon = 'snow'
+                }else if(des === 'Heavy snow'){
+                    weathericon = 'snow'
+                }else if(des === 'Sleet'){
+                    weathericon = 'sleet'
+                }else if(des === 'Light shower sleet'){
+                    weathericon = 'sleet'
+                }else if(des === 'Shower sleet'){
+                    weathericon = 'sleet'
+                }else if(des === 'Light rain and snow'){
+                    weathericon = 'sleet'
+                }else if(des === 'Rain and snow'){
+                    weathericon = 'sleet'
+                }else if(des === 'Light shower snow'){
+                    weathericon = 'sleet'
+                }else if(des === 'Shower snow'){
+                    weathericon = 'snow'
+                }else if(des === 'Heavy shower snow'){
+                    weathericon = 'snow'
+                }
+                
+            }else if(timeOfDay === 'night'){
+
+                if (des === 'light snow'){
+                    weathericon = 'snowFlurries'
+                }else if(des === 'drizzle'){
+                    weathericon = 'snowFlurries'
+                }else if(des === 'Snow'){
+                    weathericon = 'snow'
+                }else if(des === 'Heavy snow'){
+                    weathericon = 'snow'
+                }else if(des === 'Sleet'){
+                    weathericon = 'sleet'
+                }else if(des === 'Light shower sleet'){
+                    weathericon = 'sleet'
+                }else if(des === 'Shower sleet'){
+                    weathericon = 'sleet'
+                }else if(des === 'Light rain and snow'){
+                    weathericon = 'sleet'
+                }else if(des === 'Rain and snow'){
+                    weathericon = 'sleet'
+                }else if(des === 'Light shower snow'){
+                    weathericon = 'sleet'
+                }else if(des === 'Shower snow'){
+                    weathericon = 'snow'
+                }else if(des === 'Heavy shower snow'){
+                    weathericon = 'snow'
+                }
+
+            }
+
+            return weathericon
+
+        }else if(weather === 'Clear'){
+            
+            if (timeOfDay === 'day'){
+
+                if (des === 'clear sky'){
+                    weathericon = 'clearCloudy'
+                }
+                
+            }else if(timeOfDay === 'night'){
+
+                if (des === 'clear sky'){
+                    weathericon = 'clearCloudyNight'
+                }
+
+            }
+
+            return weathericon
+
+        }else if(weather === 'Clouds'){
+            
+            if (timeOfDay === 'day'){
+
+                if (des === 'few clouds'){
+                    weathericon = 'cloudy'
+                }else if(des === 'scattered clouds'){
+                    weathericon = 'cloudy'
+                }else if(des === 'broken clouds'){
+                    weathericon = 'partlyCloudy'
+                }else if(des === 'overcast clouds'){
+                    weathericon = 'partlyCloudy'
+                }
+                
+            }else if(timeOfDay === 'night'){
+
+                if (des === 'few clouds'){
+                    weathericon = 'mostlyCloudyNight'
+                }else if(des === 'scattered clouds'){
+                    weathericon = 'mostlyCloudyNight'
+                }else if(des === 'broken clouds'){
+                    weathericon = 'mostlyCloudyNight'
+                }else if(des === 'overcast clouds'){
+                    weathericon = 'mostlyCloudyNight'
+                }
+
+            }
+
+            return weathericon
+
+        }else if(weather === 'Mist'){
+            
+            if (timeOfDay === 'day'){
+
+            }else if(timeOfDay === 'night'){
+
+            }
+
+            weathericon = 'fog'
+            return weathericon
+
+        }else if(weather === 'Smoke'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Haze'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Dust'){
+            
+            if (timeOfDay === 'day'){
+                weathericon = 'windy'
+            }else if(timeOfDay === 'night'){
+                weathericon = 'windy'
+            }
+
+            return weathericon
+
+        }else if(weather === 'Fog'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+            weathericon = 'fog'
+            return weathericon
+
+        }else if(weather === 'Sand'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Ash'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Squall'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Tornado'){
+            
+            if (timeOfDay === 'day'){
+                weathericon = 'tornado'
+            }else if(timeOfDay === 'night'){
+                weathericon = 'tornado'
+            }
+
+            return weathericon
 
         }
 
@@ -552,6 +911,8 @@ const Dashboard = () => {
     console.log('nightTemp: ', nightTemp)
     console.log('ForcastForTheWeek: ', forcastForTheWeek)
     console.log('ForcastWeatherHours: ', forcastWeatherHours)
+    console.log('testingcurrentWeatherImage: ', changeWeatherImg('night', 'Rain', 'light rain' ))
+    console.log('currentWeatherIcon: ', currentWeatherIcon)
 
 
     return(
@@ -646,7 +1007,7 @@ const Dashboard = () => {
                                         </div>
                                     </div>
 
-                                        <Stat currentTemp={currentTemp} currentWeather={currentWeather} currentWeatherType={currentWeatherType} currentUnits={currentUnits} />
+                                        <Stat currentTemp={currentTemp} currentWeather={currentWeather} currentWeatherType={currentWeatherType} currentUnits={currentUnits} currentWeatherIcon={currentWeatherIcon} changeWeatherImg={changeWeatherImg} timeOfDay={timeOfDay}/>
                                     
                                     <div className='display_board_details_others'>
                                         <div className='display_board_details_others_pressure'>
