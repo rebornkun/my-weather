@@ -2,6 +2,7 @@ import './Weekly.css'
 import clearCloudy from '../../Assets/clear-cloudy.svg';
 
 
+
 const Weekly = ({key, fortheday, forcastDaily, currentUnits, getTheDay, changeWeatherImg, timeOfDay}) => {
 
     let daytemp = fortheday.temp.min.toFixed(0)

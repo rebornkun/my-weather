@@ -800,6 +800,8 @@ const Dashboard = () => {
                     weathericon = <img alt='weather icon' src={partlyCloudy}  />
                 }else if(des === 'overcast clouds'){
                     weathericon = <img alt='weather icon' src={partlyCloudy}  />
+                }else{
+                    weathericon = <img alt='weather icon' src={partlyCloudy}  />
                 }
                 
             }else if(timeOfDay === 'night'){
@@ -812,6 +814,8 @@ const Dashboard = () => {
                     weathericon = <img alt='weather icon' src={mostlyCloudyNight}  />
                 }else if(des === 'overcast clouds'){
                     weathericon = <img alt='weather icon' src={mostlyCloudyNight}  />
+                }else{
+                    weathericon = <img alt='weather icon' src={partlyCloudy}  />
                 }
 
             }
@@ -1172,7 +1176,7 @@ const Dashboard = () => {
                                             <div id='humidity_level_loading' className='meter_circle_uv_inner_circle_loading' >
                                             </div>
                                             <div className='meter_circle_uv_last_circle'>
-                                                <p id='humity_level_title' className='humity_level_title'>{humidityDegree < 40 ? "Low" : humidityDegree > 40 || humidityDegree < 60 ? "Mid" : "High"}</p>
+                                                <p id='humity_level_title' className='humity_level_title'>{currentHumidity < 40 ? "Low" : currentHumidity > 40 && currentHumidity < 60 ? "Mid" : "High"}</p>
                                             </div>
                                         </div>
                                     </div>
