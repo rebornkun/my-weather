@@ -83,7 +83,7 @@ const Dashboard = () => {
     
 
     let key = '7cdde76b930c2cf6be0b92a377a351f1'
-    let url = 'http://api.openweathermap.org/'
+    let url = 'https://api.openweathermap.org/'
     function handleSearchChange(e){
         // console.log(e.target.value)
     }
@@ -708,25 +708,25 @@ const Dashboard = () => {
                     weathericon = <img alt='weather icon' src={snowFlurries} />
                 }else if(des === 'drizzle'){
                     weathericon = <img alt='weather icon' src={snowFlurries} />
-                }else if(des === 'Snow'){
+                }else if(des === 'snow'){
                     weathericon = <img alt='weather icon' src={snow} />
-                }else if(des === 'Heavy snow'){
+                }else if(des === 'heavy snow'){
                     weathericon = <img alt='weather icon' src={snow} />
-                }else if(des === 'Sleet'){
+                }else if(des === 'sleet'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Light shower sleet'){
+                }else if(des === 'light shower sleet'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Shower sleet'){
+                }else if(des === 'shower sleet'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Light rain and snow'){
+                }else if(des === 'light rain and snow'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Rain and snow'){
+                }else if(des === 'rain and snow'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Light shower snow'){
+                }else if(des === 'light shower snow'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Shower snow'){
+                }else if(des === 'shower snow'){
                     weathericon = <img alt='weather icon' src={snow} />
-                }else if(des === 'Heavy shower snow'){
+                }else if(des === 'heavy shower snow'){
                     weathericon = <img alt='weather icon' src={snow} />
                 }
                 
@@ -736,25 +736,25 @@ const Dashboard = () => {
                     weathericon = <img alt='weather icon' src={snowFlurries} />
                 }else if(des === 'drizzle'){
                     weathericon = <img alt='weather icon' src={snowFlurries} />
-                }else if(des === 'Snow'){
+                }else if(des === 'snow'){
                     weathericon = <img alt='weather icon' src={snow} />
-                }else if(des === 'Heavy snow'){
+                }else if(des === 'heavy snow'){
                     weathericon = <img alt='weather icon' src={snow} />
-                }else if(des === 'Sleet'){
+                }else if(des === 'sleet'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Light shower sleet'){
+                }else if(des === 'light shower sleet'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Shower sleet'){
+                }else if(des === 'shower sleet'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Light rain and snow'){
+                }else if(des === 'light rain and snow'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Rain and snow'){
+                }else if(des === 'rain and snow'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Light shower snow'){
+                }else if(des === 'light shower snow'){
                     weathericon = <img alt='weather icon' src={sleet} />
-                }else if(des === 'Shower snow'){
+                }else if(des === 'shower snow'){
                     weathericon = <img alt='weather icon' src={snow} />
-                }else if(des === 'Heavy shower snow'){
+                }else if(des === 'heavy shower snow'){
                     weathericon = <img alt='weather icon' src={snow} />
                 }
 
@@ -1157,9 +1157,18 @@ const Dashboard = () => {
                                     </div>
                                     <div className='meter'>
                                         <div className=' no_border pressure_circle'>
-                                        <div className='meter_circle_rain_inner_circle_loading'>
+                                            <div className='meter_circle_pressure_inner_circle_loading'>
                                             </div>
-                                            
+                                            <div className='meter_circle_rain_last_circle'>
+                                            </div>
+                                            <div className='pressure_end_container'>
+                                                <svg width="3rem" height="3rem" viewBox="0 0 81 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M0 14L77 14" stroke="black" stroke-width="6"/>
+                                                    {/* <circle cx="23" cy="14" r="8.5" fill="white" stroke="black" stroke-width="3"/> */}
+                                                    <path d="M79 15L60 3.5" stroke="black" stroke-width="6"/>
+                                                    <path d="M60 24L79 12.5" stroke="black" stroke-width="6"/>
+                                                </svg>
+                                            </div>
                                             <div className='meter_circle_pressure_last_circle'>
                                             </div>
                                         </div>

@@ -1,0 +1,7 @@
+:root{
+    --back: #222121;
+    --line-tint: #666666;
+    --nom-text: #797979;
+    --dark-text: #747272;
+    --logo: linear-gradient(to bottom right, rgb(221, 140, 48), rgb(217, 23, 49), rgb(226, 7, 255)); 
+}
