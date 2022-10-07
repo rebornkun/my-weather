@@ -18,6 +18,7 @@
     width: 73%;
     border-right: 2px solid var(--line-tint);
     padding: 1rem 1rem;
+    position: relative;
 }
 
 .dashboard_secondpart{
@@ -713,13 +714,14 @@
 .pressure_circle svg{
         /* position: absolute; */
         height: 100%;
-        transform: rotate(343deg);
+        transform: rotate(140deg);
         /* bottom: 1.4rem; */
         /* right: 1rem; */
         /* left: 1.05rem; */
         display: flex;
         justify-content: center;
         align-items: center;
+        transition: all 0.3s ease;
 }
 .pressure_circle svg path{
     stroke: var(--weather-text-sec);
@@ -730,10 +732,11 @@
     width: 100%;
     height: 100%;
     position: relative;
-    transform: rotate(-200deg);
+    transform: rotate(0deg);
     transform-origin: center;
     display: flex;
     justify-content: center;
+    transition: all 0.3s ease;
 }
 
 .pressure_rotation{
@@ -808,4 +811,149 @@
     flex-direction: row;
     justify-content: space-between;
     width: 100%;
+}
+
+.loading_page{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loading_page i{
+    font-size: 2rem;
+    margin-right: 0.5rem;
+    animation: rotate 3s infinite linear, colorchange 3s infinite linear alternate;
+}
+
+.loading_page p{
+    font-size: 1rem;
+    font-weight: 500;
+    margin-right: 0.5rem;
+}
+.loading_text{
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+}
+.loading_text span{
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--dark-text); 
+    animation: bounceHigh 3s infinite alternate;
+    animation-delay: 0s;  
+}
+.loading_text span::before{
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--dark-text); 
+    animation: bounceHigh 3s infinite alternate;
+    animation-delay: 0.4s;  
+    position: absolute;
+    left: 0.8rem;
+}
+.loading_text span::after{
+    content: '';
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--dark-text); 
+    animation: bounceHigh 3s infinite alternate;
+    animation-delay: 0.8s;  
+    position: absolute;
+    left: 1.6rem;
+}
+
+@keyframes colorchange {
+    0%{
+        color:rgb(23, 217, 72)
+    }
+    20%{
+        color: rgb(201, 148, 4);
+    }
+    40%{
+        color: rgb(240, 7, 7);
+    }
+    60%{
+        color: rgb(214, 218, 11);
+    }
+    80%{
+        color: rgb(78, 76, 201);
+    }
+    100%{
+
+    }
+}
+
+.error_box{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+.error_box.reveal{
+    display: flex;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.error_box_cotent{
+    height: 15rem;
+    width: 70%;
+    background: var(--back);
+    z-index: 10;
+    border-radius: 30px;
+    box-shadow: 2px 2px 5px var(--line-tint);
+    padding: 2rem;
+    position: relative;
+    transition: all 0.3s ease;
+    transform: translateY(-40px);
+    /* opacity: 0; */
+}
+.error_box_cotent.reveal{
+    animation: revealerror 1s, fade-down 1s;
+    transform: translateY(0px);
+}
+
+.error_box_cotent h1{
+    color: red;
+}
+
+.error_box_cotent i{
+    position: absolute;
+    font-size: 2rem;
+    right: 2rem;
+    top: 1rem;
+    cursor: pointer;
+    color: var(--dark-text);
+    transition: all 0.3s ease;
+}
+.error_box_cotent i:hover{
+    transform: scale(1.5);
+    transition: all 0.3s ease;
+}
+
+@keyframes revealerror {
+    from{
+        opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+}
+@keyframes fade-down {
+    from{
+        transform: translateY(-40px);
+    }
+    to{
+        transform: translateY(0px);
+    }
 }

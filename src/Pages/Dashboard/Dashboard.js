@@ -62,7 +62,10 @@ const Dashboard = () => {
     const [forcastWeatherHours, SetForcastWeatherHours] = useState({})
     const [forcastWeatherThreeHours, SetForcastWeatherThreeHours] = useState([])
     const [currentWeatherIcon, setCurrentWeatherIcon] = useState('')
-
+    const [loading, setLoading] = useState(false)
+    const [errorMessage, setErrorMessage] = useState('')
+    const [error, setError] = useState(false)
+    
     //local variables to pass to state
     let currentWeatherCountry;
     let currentWeatherTime;
@@ -75,6 +78,8 @@ const Dashboard = () => {
     let windDirection; 
     let humidityDegree; 
     let humidityLevel;  
+    let pressureDegree; 
+    let pressureLevel;  
     let currentWeatherImage
 
     // units
@@ -105,12 +110,15 @@ const Dashboard = () => {
 
         // fetching Geolocation
         const getGeolocation = async function(){
-        
-            const rawGeo = await fetch(`${url}geo/1.0/direct?q=${searchboxvalue}&limit=3&appid=${key}`)
-            console.log('fetch')
-            searchboxvalue = ''
-            const processedRawGeo = await rawGeo.json()
-                    // console.log('processedRawGeo: ', processedRawGeo.length)
+            try{
+                setLoading(true)
+                const rawGeo = await fetch(`${url}geo/1.0/direct?q=${searchboxvalue}&limit=3&appid=${key}`)
+                console.log('fetch')
+                searchboxvalue = ''
+                const processedRawGeo = await rawGeo.json()
+                console.log('ddd', processedRawGeo)
+                setLoading(false)
+                // console.log('processedRawGeo: ', processedRawGeo.length)
                 if (processedRawGeo.length > 1){
 
                     //assign id to each object
@@ -124,14 +132,19 @@ const Dashboard = () => {
                     // console.log(`geoArray: ${geo}`)
     
                 }else if(processedRawGeo.length === 1){
-    
+                    
                     setGeo(processedRawGeo[0])
                     setChoose(false)
                     SetLat_N_Lon([processedRawGeo[0].lat, processedRawGeo[0].lon])
                     getCurrentWeather(processedRawGeo[0].lat, processedRawGeo[0].lon, unit)
-    
+                    
                 }
-    
+            }catch (err){
+                console.log(err.message)
+                setError(true)
+                setErrorMessage(err.message)
+            }
+                
         }
         getGeolocation()
         
@@ -150,42 +163,59 @@ const Dashboard = () => {
         
         if (lat.length === 0 || lon.length === 0){
             alert('no co-ordinates')
+            setError(true)
+            setErrorMessage('Couldnt get Co-ordinates')
         }else{
-            const rawCurWeather = await fetch(`${url}data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
-            console.log('fetching')
-            const processedRawCurWeather = await rawCurWeather.json()
-            SetCurrentWeather(processedRawCurWeather)
-            currentWeatherTime = processedRawCurWeather.dt;
-            currentWeatherTimeZone = processedRawCurWeather.timezone;
-            let totalcurrentWeatherTime = currentWeatherTime + currentWeatherTimeZone
-            let totalsunrise = processedRawCurWeather.sys.sunrise + currentWeatherTimeZone
-            let totalsunset = processedRawCurWeather.sys.sunset + currentWeatherTimeZone
-            SetCurrentTime(covertTimeToUTC(totalcurrentWeatherTime))
-            console.log('totalcurrentWeatherTime ',totalcurrentWeatherTime)
-            console.log('sunrise unix ',totalsunrise)
-            console.log('sunset unit ',totalsunset)
-            SetTimeToSunRise(covertTimeToUTC(totalsunrise))
-            SetTimeToSunSet(covertTimeToUTC(totalsunset))
-            Checktimeofday(totalcurrentWeatherTime, totalsunrise, totalsunset)
-            getForcastWeatherThreeHours(lat, lon, unit)
-            getForcastWeatherDaily(lat, lon, unit)
-            // getPrevForcastWeatherPerHour(lat, lon, totalsunrise, totalsunset)
-    
-            currentWeatherCountry = processedRawCurWeather.sys.country
-            SetCurrentWeatherType(processedRawCurWeather.weather[0])
-            currentWeatherTemp = processedRawCurWeather.main.temp
-            currentWeatherPressure = processedRawCurWeather.main.pressure
-            currentWeatherWindSpeed = processedRawCurWeather.wind.speed
-            currentWeatherHumidity = processedRawCurWeather.main.humidity
-            shorten_chain(currentWeatherCountry, currentWeatherTemp, currentWeatherPressure, currentWeatherWindSpeed, currentWeatherHumidity)
-            handleWindDirectionMeter(processedRawCurWeather.wind.deg)
-            handleHumidityMeter(processedRawCurWeather.main.humidity)
-            currentWeatherImage = changeWeatherImg(timeOfDay, processedRawCurWeather.weather[0].main, processedRawCurWeather.weather[0].description )
-            setCurrentWeatherIcon(currentWeatherImage)
-            console.log('timeOfDay: ', timeOfDay)
-            console.log('main: ', processedRawCurWeather.weather[0].main)
-            console.log('des: ', processedRawCurWeather.weather[0].description)
-            console.log('currentWeatherImage: ', currentWeatherImage)
+
+            try{
+                setLoading(true)
+                const rawCurWeather = await fetch(`${url}data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
+                console.log('fetching')
+                const processedRawCurWeather = await rawCurWeather.json()
+                setLoading(false)
+                SetCurrentWeather(processedRawCurWeather)
+                currentWeatherTime = processedRawCurWeather.dt;
+                currentWeatherTimeZone = processedRawCurWeather.timezone;
+                let totalcurrentWeatherTime = currentWeatherTime + currentWeatherTimeZone
+                let totalsunrise = processedRawCurWeather.sys.sunrise + currentWeatherTimeZone
+                let totalsunset = processedRawCurWeather.sys.sunset + currentWeatherTimeZone
+                SetCurrentTime(covertTimeToUTC(totalcurrentWeatherTime))
+                console.log('totalcurrentWeatherTime ',totalcurrentWeatherTime)
+                console.log('sunrise unix ',totalsunrise)
+                console.log('sunset unit ',totalsunset)
+                SetTimeToSunRise(covertTimeToUTC(totalsunrise))
+                SetTimeToSunSet(covertTimeToUTC(totalsunset))
+                Checktimeofday(totalcurrentWeatherTime, totalsunrise, totalsunset)
+                getForcastWeatherThreeHours(lat, lon, unit)
+                getForcastWeatherDaily(lat, lon, unit)
+                // getPrevForcastWeatherPerHour(lat, lon, totalsunrise, totalsunset)
+        
+                currentWeatherCountry = processedRawCurWeather.sys.country
+                SetCurrentWeatherType(processedRawCurWeather.weather[0])
+                currentWeatherTemp = processedRawCurWeather.main.temp
+                currentWeatherPressure = processedRawCurWeather.main.pressure
+                currentWeatherWindSpeed = processedRawCurWeather.wind.speed
+                currentWeatherHumidity = processedRawCurWeather.main.humidity
+                shorten_chain(currentWeatherCountry, currentWeatherTemp, currentWeatherPressure, currentWeatherWindSpeed, currentWeatherHumidity)
+                handleWindDirectionMeter(processedRawCurWeather.wind.deg)
+                handleHumidityMeter(processedRawCurWeather.main.humidity)
+                handlePressureMeter(processedRawCurWeather.main.pressure)
+                currentWeatherImage = changeWeatherImg(timeOfDay, processedRawCurWeather.weather[0].main, processedRawCurWeather.weather[0].description )
+                setCurrentWeatherIcon(currentWeatherImage)
+                // console.log('timeOfDay: ', timeOfDay)
+                // console.log('main: ', processedRawCurWeather.weather[0].main)
+                // console.log('des: ', processedRawCurWeather.weather[0].description)
+                // console.log('currentWeatherImage: ', currentWeatherImage)
+
+            } catch (err){
+                console.log({err})
+                if (err.message === `Cannot read properties of null (reading 'style')`){
+console.log('no')
+                }else{
+                    setError(true)
+                    setErrorMessage(err.message)
+                }
+            }
         }
         
 
@@ -193,57 +223,69 @@ const Dashboard = () => {
 
     const getForcastWeatherThreeHours = async function(lat, lon, unit){
         if (lat.length === 0 || lon.length === 0){
-            alert('no co-ordinates')
+            setError(true)
+            setErrorMessage('Couldnt get Co-ordinates')
         }else{
-            const rawForWeather = await fetch(`${url}data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}&cnt=${4}`)
-            // console.log('fetching')
-            const processedRawForWeather = await rawForWeather.json()
-            SetPopulation(processedRawForWeather.city.population)
-            SetForcastWeatherHours(processedRawForWeather)
-            let processedRawForWeatherList = processedRawForWeather.list
-            console.log('forcast3hrs: ', processedRawForWeather)
-            console.log('forcast3hrsList: ', processedRawForWeatherList)
-            console.log('forcast3hrsConverted: ', covertTimeToUTC(processedRawForWeatherList[0].dt))
-            
-            //assign id to each object
-            const processedRawForWeatherListID = processedRawForWeatherList.map((forcast , i) => {
-                return Object.assign(forcast, {id: i});
-            })
-
-            SetForcastWeatherThreeHours(processedRawForWeatherListID);
+            try{
+                const rawForWeather = await fetch(`${url}data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}&cnt=${4}`)
+                // console.log('fetching')
+                const processedRawForWeather = await rawForWeather.json()
+                SetPopulation(processedRawForWeather.city.population)
+                SetForcastWeatherHours(processedRawForWeather)
+                let processedRawForWeatherList = processedRawForWeather.list
+                console.log('forcast3hrs: ', processedRawForWeather)
+                console.log('forcast3hrsList: ', processedRawForWeatherList)
+                console.log('forcast3hrsConverted: ', covertTimeToUTC(processedRawForWeatherList[0].dt))
+                
+                //assign id to each object
+                const processedRawForWeatherListID = processedRawForWeatherList.map((forcast , i) => {
+                    return Object.assign(forcast, {id: i});
+                })
+    
+                SetForcastWeatherThreeHours(processedRawForWeatherListID);
+            }catch(err){
+                setError(true)
+                setErrorMessage(err.message)
+            }
         }
     }
 
     const getForcastWeatherDaily = async function(lat, lon, unit){
         if (lat.length === 0 || lon.length === 0){
-            alert('no co-ordinates')
+            setError(true)
+            setErrorMessage('Couldnt get Co-ordinates')
         }else{
-            const rawForWeatherDaily = await fetch(`${url}data/2.5/forecast/daily?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
-
-            // console.log('fetching')
-            const processedRawFurWeatherDaily = await rawForWeatherDaily.json()
-            let morning = processedRawFurWeatherDaily.list[0].temp.morn.toFixed(0)
-            let afternoon = processedRawFurWeatherDaily.list[0].temp.day.toFixed(0)
-            let evening = processedRawFurWeatherDaily.list[0].temp.night.toFixed(0)
-            let night = processedRawFurWeatherDaily.list[0].temp.eve.toFixed(0)
-            SetMorningTemp(morning)
-            SetAfternoonTemp(afternoon)
-            SetEveningTemp(evening)
-            SetNightTemp(night)
-            SetForcastDaily(processedRawFurWeatherDaily)
-            let slopeVars = []
-            slopeVars.push(Number(morning))
-            slopeVars.push(Number(afternoon))
-            slopeVars.push(Number(evening))
-            slopeVars.push(Number(night))
-            alignslope(slopeVars, slopeVars) 
-            let processeddailylist = processedRawFurWeatherDaily.list
-            const finalProcessedDailyList = processeddailylist.map((day , i) => {
-                return Object.assign(day, {id: i});
-            })
-            SetForcastForTheWeek(finalProcessedDailyList)
-            console.log('Forcast Daily: ', processedRawFurWeatherDaily)
-            // SetDailyTemp([morning, afternoon, evening, night])
+            try{
+                const rawForWeatherDaily = await fetch(`${url}data/2.5/forecast/daily?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
+    
+                // console.log('fetching')
+                const processedRawFurWeatherDaily = await rawForWeatherDaily.json()
+                let morning = processedRawFurWeatherDaily.list[0].temp.morn.toFixed(0)
+                let afternoon = processedRawFurWeatherDaily.list[0].temp.day.toFixed(0)
+                let evening = processedRawFurWeatherDaily.list[0].temp.night.toFixed(0)
+                let night = processedRawFurWeatherDaily.list[0].temp.eve.toFixed(0)
+                SetMorningTemp(morning)
+                SetAfternoonTemp(afternoon)
+                SetEveningTemp(evening)
+                SetNightTemp(night)
+                SetForcastDaily(processedRawFurWeatherDaily)
+                let slopeVars = []
+                slopeVars.push(Number(morning))
+                slopeVars.push(Number(afternoon))
+                slopeVars.push(Number(evening))
+                slopeVars.push(Number(night))
+                alignslope(slopeVars, slopeVars) 
+                let processeddailylist = processedRawFurWeatherDaily.list
+                const finalProcessedDailyList = processeddailylist.map((day , i) => {
+                    return Object.assign(day, {id: i});
+                })
+                SetForcastForTheWeek(finalProcessedDailyList)
+                console.log('Forcast Daily: ', processedRawFurWeatherDaily)
+                // SetDailyTemp([morning, afternoon, evening, night])
+            }catch(err){
+                setError(true)
+                setErrorMessage(err.message)
+            }
 
         }
     }
@@ -453,6 +495,13 @@ const Dashboard = () => {
         let HumidityMeter = document.getElementById('humidity_level_loading')
         HumidityMeter.style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${humidityLevel}deg, var(--weather-text) 0deg)`;
     }
+
+    const handlePressureMeter = (deg) => {
+        pressureDegree = deg
+        pressureLevel = 0.135 * deg
+        let pressureMeter = document.getElementById('pressure_guage')
+        pressureMeter.style.transform = `rotate(${pressureLevel}deg)`;
+    }
     
     //function to align temperature scale
     const alignslope = (dailyTempToBeSorted) => {
@@ -517,10 +566,16 @@ const Dashboard = () => {
         let nightTempLevel = settingLevels[3]
 
         
-        let morningPoint = document.getElementById('morning').style.bottom = `${morningTempLevel}rem`
-        let afternoonPoint = document.getElementById('afternoon').style.bottom = `${afternoonTempLevel}rem`
-        let eveningPoint = document.getElementById('evening').style.bottom = `${eveningTempLevel}rem`
-        let nightPoint = document.getElementById('night').style.bottom = `${nightTempLevel}rem`
+        let morningPoint = document.getElementById('morning')
+        let afternoonPoint = document.getElementById('afternoon')
+        let eveningPoint = document.getElementById('evening')
+        let nightPoint = document.getElementById('night')
+
+        morningPoint.style.bottom = `${morningTempLevel}rem`
+        afternoonPoint.style.bottom = `${afternoonTempLevel}rem`
+        eveningPoint.style.bottom = `${eveningTempLevel}rem`
+        nightPoint.style.bottom = `${nightTempLevel}rem`
+
     }
 
     //check for weather type and change icon base on that
@@ -908,29 +963,44 @@ const Dashboard = () => {
 
     }
 
-    console.log('currentWeather: ', currentWeather)
-    console.log('currentWeathertype: ', currentWeatherType)
-    console.log('currentTemp ',currentTemp)
-    console.log('sunrise ', timeToSunRise)
-    console.log('sunset ', timeToSunSet)
-    console.log('timeOfDay ', timeOfDay)
-    console.log('Unit ', unit)
-    console.log('lat_n_lon ', lat_n_lon)
-    console.log('Forcast Daily: ', forcastDaily)
-    console.log('morningTemp: ', morningTemp)
-    console.log('afternoonTemp: ', afternoonTemp)
-    console.log('eveningTemp: ', eveningTemp)
-    console.log('nightTemp: ', nightTemp)
-    console.log('ForcastForTheWeek: ', forcastForTheWeek)
-    console.log('ForcastWeatherHours: ', forcastWeatherHours)
-    console.log('testingcurrentWeatherImage: ', changeWeatherImg('night', 'Rain', 'light rain' ))
-    console.log('currentWeatherIcon: ', currentWeatherIcon)
+    const cancelErrorbox = () => {
+        let errorbox = document.querySelector('.error_box').classList.remove('reveal')
+        errorbox.classList.remove('reveal')
+        setError(false)
+        setLoading(false)
+    }
+    // console.log('currentWeather: ', currentWeather)
+    // console.log('currentWeathertype: ', currentWeatherType)
+    // console.log('currentTemp ',currentTemp)
+    // console.log('sunrise ', timeToSunRise)
+    // console.log('sunset ', timeToSunSet)
+    // console.log('timeOfDay ', timeOfDay)
+    // console.log('Unit ', unit)
+    // console.log('lat_n_lon ', lat_n_lon)
+    // console.log('Forcast Daily: ', forcastDaily)
+    // console.log('morningTemp: ', morningTemp)
+    // console.log('afternoonTemp: ', afternoonTemp)
+    // console.log('eveningTemp: ', eveningTemp)
+    // console.log('nightTemp: ', nightTemp)
+    // console.log('ForcastForTheWeek: ', forcastForTheWeek)
+    // console.log('ForcastWeatherHours: ', forcastWeatherHours)
+    // console.log('testingcurrentWeatherImage: ', changeWeatherImg('night', 'Rain', 'light rain' ))
+    // console.log('currentWeatherIcon: ', currentWeatherIcon)
 
 
     return(
         <div className='dashboard'>
             <div className='dashboard_container'>
                 <div className='dashboard_firstpart'>
+
+                    <div className={ error ? 'error_box reveal' : 'error_box'}>
+                        <div className={ error ? 'error_box_cotent reveal' : 'error_box_cotent'}>
+                            <i id='error_cancel' class="fa fa-times-circle" aria-hidden="true" onClick={cancelErrorbox}></i>
+                            <h1>Error!!!</h1>
+                            <p>{errorMessage}</p>
+                        </div>
+                    </div>
+
                     <div className='dashboard_firstpart_top'>
                         <SearchBox handleSearchChange={handleSearchChange} handleSeachClick={handleSeachClick} />
                         <div className='dashboard_firstpart_top_other_buttons' >
@@ -971,8 +1041,25 @@ const Dashboard = () => {
                         </div>
                     </div>
 
-                    {/* show choose if queries are more than 1 */}
-                    { choose ?
+                    
+
+                    {
+
+                    loading ? 
+                    
+                    <div className='loading_page'>
+                        <i class="fa fa-snowflake-o" aria-hidden="true"></i>
+                        <p>Loading</p>
+                        <div className='loading_text'>
+                            <span></span>
+                        </div>
+                    </div>
+                    
+                    :
+                    /* show choose if queries are more than 1 */
+                        
+                    
+                    choose ?
 
                     <div className='choose_dash'>
                         <p className='choose_dash_abeg'>We found a few Locations, Agba Help Us Out.</p>
@@ -997,7 +1084,6 @@ const Dashboard = () => {
                     </div>
 
                     :
-
 
                     <div className='dashboard_firstpart_rest'>
                         <div id='weather_board' className='dashboard_firstpart_rest_top'>
@@ -1161,8 +1247,8 @@ const Dashboard = () => {
                                             </div>
                                             <div className='meter_circle_rain_last_circle'>
                                             </div>
-                                            <div className='pressure_end_container'>
-                                                <svg width="3rem" height="3rem" viewBox="0 0 81 27" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <div id='pressure_guage' className='pressure_end_container'>
+                                                <svg  width="3rem" height="3rem" viewBox="0 0 81 27" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     <path d="M0 14L77 14" stroke="black" stroke-width="6"/>
                                                     {/* <circle cx="23" cy="14" r="8.5" fill="white" stroke="black" stroke-width="3"/> */}
                                                     <path d="M79 15L60 3.5" stroke="black" stroke-width="6"/>
@@ -1199,6 +1285,20 @@ const Dashboard = () => {
 
                 <div className='dashboard_secondpart'>
                     <p className='dashboard_secondpart_title'>This Week</p>
+
+                    {
+                    loading ? 
+                    
+                    <div className='loading_page'>
+                        <i class="fa fa-snowflake-o" aria-hidden="true"></i>
+                        <p>Loading</p>
+                        <div className='loading_text'>
+                            <span></span>
+                        </div>
+                    </div>
+
+                    :
+
                     <div>
                         <div className='today_forecast_hourly'>
                             <p className='today_forecast_hourly_title'>Today</p>
@@ -1240,6 +1340,8 @@ const Dashboard = () => {
                             }
                         </div>
                     </div>
+                    
+                    }
                 </div>
             </div>
         </div>
