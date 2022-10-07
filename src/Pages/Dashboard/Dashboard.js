@@ -30,6 +30,9 @@ import thunderstroms from '../../Assets/thunderstroms.svg';
 import tornado from '../../Assets/tornado.svg';
 import windy from '../../Assets/windy.svg';
 
+//videos
+import clearNight from '../../Assets/Videos/clearNight.mp4'
+
 
 const Dashboard = () => {
 
@@ -493,7 +496,7 @@ console.log('no')
         humidityDegree = deg
         humidityLevel = 3.6 * deg
         let HumidityMeter = document.getElementById('humidity_level_loading')
-        HumidityMeter.style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${humidityLevel}deg, var(--weather-text) 0deg)`;
+        HumidityMeter.style.background = `conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) ${humidityLevel}deg, var(--weekly-overlay) 0deg)`;
     }
 
     const handlePressureMeter = (deg) => {
@@ -969,6 +972,10 @@ console.log('no')
         setError(false)
         setLoading(false)
     }
+
+    const setVideoLoaded = () => {
+
+    }
     // console.log('currentWeather: ', currentWeather)
     // console.log('currentWeathertype: ', currentWeatherType)
     // console.log('currentTemp ',currentTemp)
@@ -1087,6 +1094,20 @@ console.log('no')
 
                     <div className='dashboard_firstpart_rest'>
                         <div id='weather_board' className='dashboard_firstpart_rest_top'>
+                            <div className='video_container'>
+                                <video
+                                    autoPlay
+                                    playsInline
+                                    muted
+                                    className="video"
+                                    loop
+                                    src={clearNight}
+                                    poster={clearCloudy}
+                                    onLoadedData={() => {
+                                    setVideoLoaded();
+                                    }}
+                                />
+                            </div>
                             <div className='display_board'>
                                 <div className='display_board_details'>
                                     <div className='display_board_details_location_and_date'>

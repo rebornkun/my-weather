@@ -3,7 +3,7 @@
     height: 6rem;
     padding: 0.5rem;
     /* box-shadow: 2px 2px 5px var(--line-tint); */
-    background: var(--weather-text);
+    background: var(--weekly-overlay);
     border-radius: 10px;
     display: flex;
     flex-direction: column;

@@ -1,6 +1,7 @@
 import Aside from '../Components/Aside/Aside';
-import daycss from '../skins/day.css';
+// import daycss from '../skins/day.css';
 import clearcss from '../skins/clear.css';
+import nightcss from '../skins/night.css';
 import icons from '../font-awesome-4.7.0/css/font-awesome.min.css'
 import Dashboard from '../Pages/Dashboard/Dashboard';
 import './App.css';

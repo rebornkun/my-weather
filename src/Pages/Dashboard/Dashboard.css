@@ -214,6 +214,21 @@
     box-shadow: 3px 3px 7px var(--line-tint);
     background-repeat: no-repeat;
     background-size: cover;
+    position: relative;
+}
+
+.video_container{
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    box-shadow: 3px 3px 7px var(--line-tint);
+    z-index: 1;
+}
+.video_container video{
+    width: 100%;
+    position: absolute;
 }
 
 .display_board{
@@ -225,6 +240,7 @@
     flex: 0 0 50%;
     height: 100%;
     justify-content: space-between;
+    z-index: 2;
 }
 
 .display_board_details{
@@ -232,6 +248,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    z-index: 2;
 }
 
 .display_board_temperature{
@@ -242,6 +259,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    z-index: 2;
 }
 
 .display_board_details_location_and_date{
@@ -485,7 +503,7 @@
     height: 6.5rem;
     padding: 1rem;
     flex-direction: row;
-    background: var(--weather-text);
+    background: var(--weekly-overlay);
     
 }
 
@@ -498,7 +516,7 @@
     height: 6.5rem;
     padding: 1rem;
     flex-direction: row;
-    background: var(--weather-text);
+    background: var(--weekly-overlay);
 }
 
 .text_part{
@@ -535,7 +553,7 @@
     border-radius: 50%;
     position: relative;
     box-shadow: 2px 2px 5px var(--line-tint);
-    background: var(--weather-text);
+    background: var(--weekly-overlay);
     transition: all 0.3s ease;
 }
 .meter_circle:hover{
@@ -611,7 +629,7 @@
 .meter_circle_rain_last_circle{
     width: 85%;
     height: 85%;
-    background: var(--weather-text);
+    background: var(--weekly-overlay);
     border-radius: 50%;
     position: absolute;
     top: 0;
@@ -635,7 +653,7 @@
 .meter_circle_pressure_inner_circle_loading{
     width: 100%;
     height: 100%;
-    background: var(--weather-text);
+    background: var(--weekly-overlay);
     border-radius: 50%;
     position: absolute;
     top: 0;
@@ -646,8 +664,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 3px dashed blue;
-    border-bottom: 4px solid var(--weather-text);
+    border: 3px dashed var(--weather-text-sec);
+    border-bottom: 4px solid var(--weekly-overlay);
     transition: all 0.3s ease;
     opacity: 0.5;
 }
@@ -655,7 +673,7 @@
 .meter_circle_uv_inner_circle_loading{
     width: 100%;
     height: 100%;
-    background: conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) 230deg, var(--weather-text) 0deg) ;
+    background: conic-gradient(rgb(78, 76, 201), rgb(23, 217, 72), rgb(214, 218, 11), rgb(201, 148, 4), rgb(240, 7, 7) 230deg, var(--weekly-overlay) 0deg) ;
     border-radius: 50%;
     position: absolute;
     top: 0;
@@ -667,7 +685,7 @@
 .meter_circle_uv_last_circle{
     width: 90%;
     height: 90%;
-    background: var(--weather-text);
+    background: var(--weekly-overlay);
     border-radius: 50%;
     position: absolute;
     top: 0;
