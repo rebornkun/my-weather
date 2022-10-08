@@ -1,9 +1,9 @@
 :root{
     --back: #1e2530;
-    --line-tint: #374d5b;
-    --weekly-overlay: #627080;
+    --line-tint: #141414;
+    --weekly-overlay: #263342;
     --weather-text: #b2bbc5;
-    --nom-text: #a6c3de;
+    --nom-text: #e0e9eb;
     --dark-text: #a6c3de;
     --logo: linear-gradient(to bottom right, rgb(48, 109, 221), rgb(26, 199, 176), rgb(97, 11, 126)); 
     --weather-text-sec: #000932;

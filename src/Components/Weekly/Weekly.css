@@ -50,6 +50,6 @@
 }
 
 .weekly_container img{
-    filter: drop-shadow(2px 4px 6px var(--dark-text));
+    filter: drop-shadow(2px 4px 6px var(--line-tint));
     width: 4.5rem;
 }

@@ -22,7 +22,7 @@
 .display_board_details_temp img{
     width: 6rem;
     height: 6rem;
-    filter: drop-shadow(3px 5px 3px var(--dark-text));
+    filter: drop-shadow(3px 5px 3px var(--line-tint));
     animation: iconshake 3s linear infinite alternate;
 }
 

@@ -24,6 +24,9 @@
     font-weight: 600;
     background: transparent;
 }
+.searchbox_container input:focus{
+    background: transparent;
+}
 .searchbox_container input::placeholder{
     color: var(--nom-text);
     font-weight: 400;
