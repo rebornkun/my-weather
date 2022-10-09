@@ -32,9 +32,22 @@ import windy from '../../Assets/windy.svg';
 
 //videos
 import clearNight from '../../Assets/Videos/clearNight.mp4'
+import clearNightPoster from '../../Assets/Videos/clearNightPoster.png'
+import clearDay from '../../Assets/Videos/clearDay.mp4'
+import clearDayPoster from '../../Assets/Videos/clearDayPoster.png'
+import rainyNight from '../../Assets/Videos/rainyNight.mp4'
+import rainyNightPoster from '../../Assets/Videos/rainyNightPoster.png'
+import rainyDay from '../../Assets/Videos/rainyDay.mp4'
+import rainyDayPoster from '../../Assets/Videos/rainyDayPoster.png'
+import snowyDay from '../../Assets/Videos/snowyDay.mp4'
+import snowyDayPoster from '../../Assets/Videos/snowyDayPoster.png'
+import snowyNight from '../../Assets/Videos/snowyNight.mp4'
+import snowyNightPoster from '../../Assets/Videos/snowyNightPoster.png'
+import thunderstormNight from '../../Assets/Videos/thunderstormNight.mp4'
+import thunderstormNightPoster from '../../Assets/Videos/thunderstormNightPoster.png'
 
 
-const Dashboard = () => {
+const Dashboard = ({ setTheme }) => {
 
     const [searchField, setSearchField] = useState('')
     const [query, setQuery] = useState('')
@@ -65,7 +78,9 @@ const Dashboard = () => {
     const [forcastWeatherHours, SetForcastWeatherHours] = useState({})
     const [forcastWeatherThreeHours, SetForcastWeatherThreeHours] = useState([])
     const [currentWeatherIcon, setCurrentWeatherIcon] = useState('')
+    const [currentWeatherVideo, setCurrentWeatherVideo] = useState([])
     const [loading, setLoading] = useState(false)
+    const [loadingsec, setLoadingsec] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const [error, setError] = useState(false)
     
@@ -115,12 +130,14 @@ const Dashboard = () => {
         const getGeolocation = async function(){
             try{
                 setLoading(true)
+                setLoadingsec(true)
                 const rawGeo = await fetch(`${url}geo/1.0/direct?q=${searchboxvalue}&limit=3&appid=${key}`)
                 console.log('fetch')
                 searchboxvalue = ''
                 const processedRawGeo = await rawGeo.json()
                 console.log('ddd', processedRawGeo)
                 setLoading(false)
+                
                 // console.log('processedRawGeo: ', processedRawGeo.length)
                 if (processedRawGeo.length > 1){
 
@@ -143,9 +160,13 @@ const Dashboard = () => {
                     
                 }
             }catch (err){
-                console.log(err.message)
-                setError(true)
-                setErrorMessage(err.message)
+                if (err.message === `Cannot read properties of null (reading 'style')`){
+                }else{
+                    setError(true)
+                    setErrorMessage(err.message)
+                    setLoading(false)
+                    setLoadingsec(false)
+                }
             }
                 
         }
@@ -155,10 +176,12 @@ const Dashboard = () => {
 
     const getId = (id) => {
         // return id;
+        setLoadingsec(true)
         let presentChoice = geo[id]
         SetLat_N_Lon([presentChoice.lat, presentChoice.lon])
         getCurrentWeather(presentChoice.lat, presentChoice.lon, unit)
         setChoose(false)
+        setLoadingsec(false)
         // console.log(presentChoice)
     }
 
@@ -172,10 +195,12 @@ const Dashboard = () => {
 
             try{
                 setLoading(true)
+                setLoadingsec(true)
                 const rawCurWeather = await fetch(`${url}data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
                 console.log('fetching')
                 const processedRawCurWeather = await rawCurWeather.json()
                 setLoading(false)
+                setLoadingsec(false)
                 SetCurrentWeather(processedRawCurWeather)
                 currentWeatherTime = processedRawCurWeather.dt;
                 currentWeatherTimeZone = processedRawCurWeather.timezone;
@@ -203,8 +228,8 @@ const Dashboard = () => {
                 handleWindDirectionMeter(processedRawCurWeather.wind.deg)
                 handleHumidityMeter(processedRawCurWeather.main.humidity)
                 handlePressureMeter(processedRawCurWeather.main.pressure)
-                currentWeatherImage = changeWeatherImg(timeOfDay, processedRawCurWeather.weather[0].main, processedRawCurWeather.weather[0].description )
-                setCurrentWeatherIcon(currentWeatherImage)
+                // currentWeatherImage = changeWeatherImg(timeOfDay, processedRawCurWeather.weather[0].main, processedRawCurWeather.weather[0].description )
+                // setCurrentWeatherIcon(currentWeatherImage)
                 // console.log('timeOfDay: ', timeOfDay)
                 // console.log('main: ', processedRawCurWeather.weather[0].main)
                 // console.log('des: ', processedRawCurWeather.weather[0].description)
@@ -213,10 +238,11 @@ const Dashboard = () => {
             } catch (err){
                 console.log({err})
                 if (err.message === `Cannot read properties of null (reading 'style')`){
-console.log('no')
                 }else{
                     setError(true)
                     setErrorMessage(err.message)
+                    setLoading(false)
+                    setLoadingsec(false)
                 }
             }
         }
@@ -247,8 +273,13 @@ console.log('no')
     
                 SetForcastWeatherThreeHours(processedRawForWeatherListID);
             }catch(err){
-                setError(true)
-                setErrorMessage(err.message)
+                if (err.message === `Cannot read properties of null (reading 'style')`){
+                }else{
+                    setError(true)
+                    setErrorMessage(err.message)
+                    setLoading(false)
+                    setLoadingsec(false)
+                }
             }
         }
     }
@@ -286,8 +317,13 @@ console.log('no')
                 console.log('Forcast Daily: ', processedRawFurWeatherDaily)
                 // SetDailyTemp([morning, afternoon, evening, night])
             }catch(err){
-                setError(true)
-                setErrorMessage(err.message)
+                if (err.message === `Cannot read properties of null (reading 'style')`){
+                }else{
+                    setError(true)
+                    setErrorMessage(err.message)
+                    setLoading(false)
+                    setLoadingsec(false)
+                }
             }
 
         }
@@ -362,7 +398,7 @@ console.log('no')
         // SetCurrentTime(`${hours}:${minutes}${AM_or_PM}`) 
     }
 
-    //get the day of forecast for wach day of the week
+    //get the day of forecast for each day of the week
     const getTheDay = (timestamp) => {
 
         var date = new Date(timestamp * 1000);
@@ -452,21 +488,27 @@ console.log('no')
 
         if (sunriseunix < CurrentTimeUnix && sunsetunix > CurrentTimeUnix){
             SetTimeOfDay('day')
+            setTheme('day')
         }else if (sunriseunix > CurrentTimeUnix && sunsetunix < CurrentTimeUnix){
             SetTimeOfDay('night')
+            setTheme('night')
         }else if (sunriseunix > CurrentTimeUnix && sunsetunix > CurrentTimeUnix){
 
             if (sunrisediff < sunsetdiff){
                 SetTimeOfDay('night')
+                setTheme('night')
             }else{
                 SetTimeOfDay('day')
+                setTheme('day')
             }
         }else if (sunriseunix < CurrentTimeUnix && sunsetunix < CurrentTimeUnix){
 
             if (sunrisediff < sunsetdiff){
                 SetTimeOfDay('night')
+                setTheme('night')
             }else{
                 SetTimeOfDay('day')
+                setTheme('day')
             }
         }
 
@@ -582,6 +624,158 @@ console.log('no')
     }
 
     //check for weather type and change icon base on that
+    
+    const changeWeatherVideo = (timeOfDay, weather) => {
+
+        let weatherVideo
+        let WeatherBackground = document.getElementById('weather_board')
+
+        if (weather === 'Rain'){
+
+            if (timeOfDay === 'day'){
+
+                weatherVideo = rainyDay
+                
+            }else if(timeOfDay === 'night'){
+
+                weatherVideo = rainyNight
+
+            }
+
+        }else if(weather === 'Thunderstorm'){
+
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+                weatherVideo = thunderstormNight
+            }
+
+        }else if(weather === 'Drizzle'){
+            
+            if (timeOfDay === 'day'){
+
+                weatherVideo = rainyDay
+                
+            }else if(timeOfDay === 'night'){
+
+                weatherVideo = rainyNight
+            }
+
+        }else if(weather === 'Snow'){
+            
+            if (timeOfDay === 'day'){
+
+                weatherVideo = snowyDay
+                
+            }else if(timeOfDay === 'night'){
+
+                weatherVideo = snowyNight
+
+            }
+
+        }else if(weather === 'Clear'){
+            
+            if (timeOfDay === 'day'){
+
+                weatherVideo = clearDay
+                
+            }else if(timeOfDay === 'night'){
+
+                weatherVideo = clearNight
+
+            }
+
+        }else if(weather === 'Clouds'){
+            
+            if (timeOfDay === 'day'){
+
+                weatherVideo = clearDay
+                
+            }else if(timeOfDay === 'night'){
+
+                weatherVideo = clearNight
+            }
+
+
+        }else if(weather === 'Mist'){
+            
+            if (timeOfDay === 'day'){
+
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Smoke'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Haze'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Dust'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+                
+            }
+
+        }else if(weather === 'Fog'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Sand'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Ash'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Squall'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+
+            }
+
+        }else if(weather === 'Tornado'){
+            
+            if (timeOfDay === 'day'){
+                
+            }else if(timeOfDay === 'night'){
+                
+            }
+
+        }
+
+        return weatherVideo
+
+    }
+
     const changeWeatherImg = (timeOfDay, weather, des) => {
 
         let weathericon
@@ -646,7 +840,7 @@ console.log('no')
 
             }
 
-            return weathericon
+            
 
         }else if(weather === 'Thunderstorm'){
 
@@ -702,7 +896,7 @@ console.log('no')
 
             }
 
-            return weathericon
+            
 
         }else if(weather === 'Drizzle'){
             
@@ -753,10 +947,10 @@ console.log('no')
                 }
 
                 weathericon = <img alt='weather icon' src={drizzleNight} />
-
+                // setCurrentWeatherVideo([rainyNight , rainyNightPoster])
             }
 
-            return weathericon
+            
 
         }else if(weather === 'Snow'){
             
@@ -818,7 +1012,7 @@ console.log('no')
 
             }
 
-            return weathericon
+            
 
         }else if(weather === 'Clear'){
             
@@ -831,6 +1025,7 @@ console.log('no')
                 }
 
                 weathericon = <img alt='weather icon' src={clearCloudy} />
+                // setCurrentWeatherVideo([clearDay , clearDayPoster])
                 
             }else if(timeOfDay === 'night'){
 
@@ -839,11 +1034,11 @@ console.log('no')
                 }
 
                 weathericon = <img alt='weather icon' src={clearCloudy} />
-                
+                // setCurrentWeatherVideo([clearNight , clearNightPoster])
 
             }
 
-            return weathericon
+            
 
         }else if(weather === 'Clouds'){
             
@@ -861,6 +1056,8 @@ console.log('no')
                 }else{
                     weathericon = <img alt='weather icon' src={partlyCloudy}  />
                 }
+
+                // setCurrentWeatherVideo([clearDay , clearDayPoster])
                 
             }else if(timeOfDay === 'night'){
 
@@ -876,9 +1073,10 @@ console.log('no')
                     weathericon = <img alt='weather icon' src={partlyCloudy}  />
                 }
 
+                // setCurrentWeatherVideo([clearNightPoster , clearNightPoster])
             }
 
-            return weathericon
+            
 
         }else if(weather === 'Mist'){
             
@@ -889,7 +1087,7 @@ console.log('no')
             }
 
             weathericon = <img alt='weather icon' src={fog} />
-            return weathericon
+            
 
         }else if(weather === 'Smoke'){
             
@@ -915,7 +1113,7 @@ console.log('no')
                 weathericon = <img alt='weather icon' src={windy} />
             }
 
-            return weathericon
+            
 
         }else if(weather === 'Fog'){
             
@@ -926,7 +1124,7 @@ console.log('no')
             }
 
             weathericon = <img alt='weather icon' src={fog} />
-            return weathericon
+            
 
         }else if(weather === 'Sand'){
             
@@ -960,9 +1158,11 @@ console.log('no')
                 weathericon = <img alt='weather icon' src={tornado} />
             }
 
-            return weathericon
+            
 
         }
+
+        return weathericon
 
     }
 
@@ -976,23 +1176,16 @@ console.log('no')
     const setVideoLoaded = () => {
 
     }
-    // console.log('currentWeather: ', currentWeather)
-    // console.log('currentWeathertype: ', currentWeatherType)
-    // console.log('currentTemp ',currentTemp)
-    // console.log('sunrise ', timeToSunRise)
-    // console.log('sunset ', timeToSunSet)
-    // console.log('timeOfDay ', timeOfDay)
-    // console.log('Unit ', unit)
-    // console.log('lat_n_lon ', lat_n_lon)
-    // console.log('Forcast Daily: ', forcastDaily)
-    // console.log('morningTemp: ', morningTemp)
-    // console.log('afternoonTemp: ', afternoonTemp)
-    // console.log('eveningTemp: ', eveningTemp)
-    // console.log('nightTemp: ', nightTemp)
-    // console.log('ForcastForTheWeek: ', forcastForTheWeek)
-    // console.log('ForcastWeatherHours: ', forcastWeatherHours)
-    // console.log('testingcurrentWeatherImage: ', changeWeatherImg('night', 'Rain', 'light rain' ))
-    // console.log('currentWeatherIcon: ', currentWeatherIcon)
+
+    // const setTheme = () => {
+    //     if (){
+            
+    //     }
+    // }
+    
+
+    let weatherDisplayVideo = changeWeatherVideo(timeOfDay, currentWeatherType.main)
+    console.log('weatherDisplayVideo', weatherDisplayVideo)
 
 
     return(
@@ -1101,8 +1294,9 @@ console.log('no')
                                     muted
                                     className="video"
                                     loop
-                                    src={clearNight}
-                                    poster={clearCloudy}
+                                    src={weatherDisplayVideo}
+                                    // src = {`${video}`}
+                                    // poster={weatherDisplayVideo[1]}
                                     onLoadedData={() => {
                                     setVideoLoaded();
                                     }}
@@ -1139,7 +1333,7 @@ console.log('no')
                                                 <path d="M9.0083 29.902C50.0698 29.902 79.0409 26.9415 82.5768 25.4612C89.1923 23.9218 92.5 20.6964 92.5 13.56C92.5 6.27713 77.4441 0.592953 67.5209 6.27713C59.5824 10.8245 57.4837 16.9942 57.9399 18.7113" stroke="#6D6464" stroke-width="3"/>
                                             </svg>
                                             <p className='smallp'>{currentPressure}hPa</p>
-                                            {/* <p className='smallp'>720hpa</p> */}
+                                            
                                         </div>
                                         <div className='display_board_details_others_chance_rain'>
                                             <i class="fa fa-tint" aria-hidden="true"></i>
@@ -1308,7 +1502,7 @@ console.log('no')
                     <p className='dashboard_secondpart_title'>This Week</p>
 
                     {
-                    loading ? 
+                    loadingsec ? 
                     
                     <div className='loading_page'>
                         <i class="fa fa-snowflake-o" aria-hidden="true"></i>

@@ -19,12 +19,14 @@
     border-right: 2px solid var(--line-tint);
     padding: 1rem 1rem;
     position: relative;
+    transition: all 0.7s ease;
 }
 
 .dashboard_secondpart{
     height: 100%;
     background: var(--back);
     width: 27%;
+    transition: all 0.7s ease;
 }
 
 .dashboard_firstpart_top{
@@ -58,6 +60,7 @@
     cursor: pointer;
     background: var(--back);
     box-shadow: 2px 2px 7px var(--line-tint);
+    transition: all 0.7s ease;
 }
 
 .unit_base_option{
@@ -67,6 +70,7 @@
     font-weight: 400;
     font-family: 'Poppins', sans-serif;
     color: var(--dark-text);
+    transition: all 0.7s ease;
 }
 .unit_button_option{
     height: 2rem;
@@ -85,6 +89,7 @@
     background: var(--weather-text);
     box-shadow: 2px 2px 7px var(--line-tint);
     position: absolute;
+    
 }
 .unit_button_option p{
     width: 2rem;
@@ -93,6 +98,7 @@
     font-weight: 1000;
     font-family: 'Poppins', sans-serif;
     color: var(--weather-text-sec);
+    transition: all 0.7s ease;
 }
 
 .unit_button_option.active{
@@ -147,6 +153,7 @@
     cursor: pointer;
     background: var(--back);
     box-shadow: 2px 2px 7px var(--line-tint);   
+    transition: all 0.7s ease;
 }
 .notification_button i{
     font-size: 1rem;
@@ -504,6 +511,7 @@
     padding: 1rem;
     flex-direction: row;
     background: var(--weekly-overlay);
+    transition: all 0.7s ease;
     
 }
 
@@ -517,6 +525,7 @@
     padding: 1rem;
     flex-direction: row;
     background: var(--weekly-overlay);
+    transition: all 0.7s ease;
 }
 
 .text_part{
@@ -602,7 +611,7 @@
     left: 0;
     right: 0;
     transform: rotate(-45deg);
-    transition: all 0.3s ease;
+    transition: all 0.5s ease;
 }
 .meter_circle svg path{
     stroke: var(--weather-text-sec);
@@ -640,7 +649,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 0.3s ease;
+    transition: all 0.7s ease;
 }
 
 .meter_circle_rain_last_circle p{
@@ -666,7 +675,7 @@
     align-items: center;
     border: 3px dashed var(--weather-text-sec);
     border-bottom: 4px solid var(--weekly-overlay);
-    transition: all 0.3s ease;
+    transition: all 0.7s ease;
     opacity: 0.5;
 }
 
@@ -679,7 +688,7 @@
     top: 0;
     right: 0;
     transform: rotate(-110deg);
-    transition: all 0.3s ease;
+    transition: all 0.7s ease;
 }
 
 .meter_circle_uv_last_circle{
@@ -739,7 +748,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        transition: all 0.3s ease;
+        transition: all 0.5s ease;
 }
 .pressure_circle svg path{
     stroke: var(--weather-text-sec);
@@ -754,7 +763,7 @@
     transform-origin: center;
     display: flex;
     justify-content: center;
-    transition: all 0.3s ease;
+    transition: all 0.7s ease;
 }
 
 .pressure_rotation{

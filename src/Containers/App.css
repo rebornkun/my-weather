@@ -1,3 +1,23 @@
+/* theme */
+
+#day{
+    --back: #fafffe;
+    --line-tint: #dacccc78;
+    --nom-text: #adabab;
+    --dark-text: #2b2727;
+    --logo: linear-gradient(to bottom right, rgb(148 221 48), rgb(23 217 190), rgb(12 62 91)); 
+}
+#night{
+    --back: #1e2530;
+    --line-tint: #1616166b;
+    --weekly-overlay: #263342;
+    --weather-text: #b2bbc5;
+    --nom-text: #e0e9eb;
+    --dark-text: #a6c3de;
+    --logo: linear-gradient(to bottom right, rgb(48, 109, 221), rgb(26, 199, 176), rgb(97, 11, 126)); 
+    --weather-text-sec: #000932;
+}
+
 /* animations */
 @keyframes rotate {
   from{
