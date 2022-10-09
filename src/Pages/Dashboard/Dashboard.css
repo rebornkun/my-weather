@@ -988,3 +988,129 @@
         transform: translateY(0px);
     }
 }
+
+@media screen and (max-width: 1280px) {
+
+    
+}
+
+@media screen and (max-width: 1024px) {
+
+    .dashboard {
+        width: 100vw;
+    }
+
+    .dashboard_container {
+        flex-direction: column;
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+
+    .dashboard_firstpart {
+        width: 100%;
+        border-right: none;
+        padding: 0rem 0rem;
+        padding-bottom: 1rem;
+        height: fit-content;
+    }
+
+    .dashboard_firstpart_rest {
+        margin-top: 0rem;
+        height: 100%;
+    }
+
+    .dashboard_firstpart_rest_top {
+        border-radius: 0rem;
+        height: 100vh;
+        border-radius: 0rem 0rem 2rem 2rem;
+    }
+
+    .video_container {
+        border-radius: 0rem;
+        border-radius: 0rem 0rem 2rem 2rem;
+    }
+
+    .video_container video {
+        width:auto;
+        height: 100%;
+        position: absolute;
+    }
+
+    .display_board {
+        padding: 1rem;
+        flex-direction: column;
+        justify-content: space-around;
+    }
+
+    .dashboard_firstpart_rest_buttom {
+        gap: 0rem;
+        row-gap: 1rem;
+        padding: 1rem;
+    }
+
+    .dashboard_firstpart_rest_buttom_top {
+        flex-direction: column;
+    }
+
+    .dashboard_firstpart_rest_buttom_buttom {
+        flex-direction: column;
+    }
+
+    .dashboard_secondpart {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .today_forecast_hourly {
+        padding: 0rem 0rem 1rem 0rem;
+    }
+
+    .today_forecast_weekly {
+        padding: 0rem;
+        gap: 0.5rem;
+    }
+    
+    .dashboard_firstpart_top {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        position: absolute;
+        z-index: 10;
+        background: var(--back);
+        width: 100%;
+        transition: all 0.5s ease;
+    }
+
+    .searchbox {
+        width: 100%;
+        box-shadow: 2px 2px 7px var(--line-tint);
+        border-radius: 20px;
+        padding: 0rem 0.5rem;
+        margin-bottom: 10px;
+    }
+
+    .searchbox_container {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .dashboard_firstpart_top_other_buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+@media screen and (max-width: 860px) {
+
+}
+
+@media screen and (max-width: 576px) {
+
+}
