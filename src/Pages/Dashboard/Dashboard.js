@@ -83,6 +83,7 @@ const Dashboard = ({ setTheme }) => {
     const [loadingsec, setLoadingsec] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
     const [error, setError] = useState(false)
+    const [showSearchBar, setShowSearchBar] = useState(true)
     
     //local variables to pass to state
     let currentWeatherCountry;
@@ -123,8 +124,8 @@ const Dashboard = ({ setTheme }) => {
     const handleSeachClick = (e) => {
         let searchbox = document.getElementById('search');
         let searchboxvalue = searchbox.value;
-        
         setQuery(searchboxvalue)
+        setShowSearchBar(false)
 
         // fetching Geolocation
         const getGeolocation = async function(){
@@ -187,13 +188,16 @@ const Dashboard = ({ setTheme }) => {
 
     const getCurrentWeather = async function(lat, lon, unit){
         
+        
         if (lat.length === 0 || lon.length === 0){
             alert('no co-ordinates')
             setError(true)
             setErrorMessage('Couldnt get Co-ordinates')
+            setShowSearchBar(false)
         }else{
-
+            
             try{
+                setShowSearchBar(false)
                 setLoading(true)
                 setLoadingsec(true)
                 const rawCurWeather = await fetch(`${url}data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key}&units=${unit}`)
@@ -1182,10 +1186,23 @@ const Dashboard = ({ setTheme }) => {
             
     //     }
     // }
-    
+    const handleSearchBar = () => {
+        // let search_container = document.querySelector('.search_toggler')
+        let dashboard_firstpart_top = document.querySelector('.dashboard_firstpart_top')
+        
+        if(dashboard_firstpart_top.classList.contains('active')){
+            // search_container.classList.remove('active')
+            dashboard_firstpart_top.classList.remove('active')
+            setShowSearchBar(true)
+        }else{
+            // search_container.classList.add('active')
+            dashboard_firstpart_top.classList.add('active')
+        }
+    }
 
     let weatherDisplayVideo = changeWeatherVideo(timeOfDay, currentWeatherType.main)
     console.log('weatherDisplayVideo', weatherDisplayVideo)
+    console.log('showSearchBar ', showSearchBar)
 
 
     return(
@@ -1201,7 +1218,7 @@ const Dashboard = ({ setTheme }) => {
                         </div>
                     </div>
 
-                    <div className='dashboard_firstpart_top'>
+                    <div className={ showSearchBar ? 'dashboard_firstpart_top' : 'dashboard_firstpart_top active'}>
                         <SearchBox handleSearchChange={handleSearchChange} handleSeachClick={handleSeachClick} />
                         <div className='dashboard_firstpart_top_other_buttons' >
                             <div className='unit_button' onClick={handleUnitButtonClick}>
@@ -1238,6 +1255,9 @@ const Dashboard = ({ setTheme }) => {
                             <div className='Profile_button'>
                                 <i class="fa fa-user" aria-hidden="true"></i>
                             </div>
+                        </div>
+                        <div className='search_toggler' onClick={handleSearchBar} >
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
                         </div>
                     </div>
 
@@ -1499,7 +1519,7 @@ const Dashboard = ({ setTheme }) => {
                 </div>
 
                 <div className='dashboard_secondpart'>
-                    <p className='dashboard_secondpart_title'>This Week</p>
+                    
 
                     {
                     loadingsec ? 
@@ -1513,8 +1533,8 @@ const Dashboard = ({ setTheme }) => {
                     </div>
 
                     :
-
                     <div>
+                        <p className='dashboard_secondpart_title'>This Week</p>
                         <div className='today_forecast_hourly'>
                             <p className='today_forecast_hourly_title'>Today</p>
                             <div className='today_forecast_hourly_box_container'>

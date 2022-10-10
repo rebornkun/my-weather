@@ -82,3 +82,21 @@
     transform: scale(1.2);
     z-index: 7;
 }
+
+@media screen and (max-width: 1024px) {
+
+
+    .choose_dash {
+        margin-top: 2.5rem;
+        padding: 1rem;
+    }
+
+    .choose_dash_container {
+        flex-direction: column;
+    }
+
+    .choose {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+}

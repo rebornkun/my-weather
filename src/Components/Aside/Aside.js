@@ -4,12 +4,12 @@ import './Aside.css'
 const Aside = () => {
 
     const handleNavBar = () => {
-        let aside_container = document.querySelector('.aside_container')
+        let aside = document.querySelector('.aside')
         
-        if(aside_container.classList.contains('active')){
-            aside_container.classList.remove('active')
+        if(aside.classList.contains('active')){
+            aside.classList.remove('active')
         }else{
-            aside_container.classList.add('active')
+            aside.classList.add('active')
         }
     }
 
