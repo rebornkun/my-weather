@@ -1,10 +1,29 @@
 {
   "files": {
-    "main.css": "/my-weather/static/css/main.b4e8f775.css",
-    "main.js": "/my-weather/static/js/main.fcd5b547.js",
+    "main.css": "/my-weather/static/css/main.09dcd7b0.css",
+    "main.js": "/my-weather/static/js/main.99e4ec51.js",
+    "static/media/clearDay.mp4": "/my-weather/static/media/clearDay.c2689fc76a3f061ff95d.mp4",
+    "static/media/rainyNightPoster.png": "/my-weather/static/media/rainyNightPoster.efae301e638b0be658d3.png",
+    "static/media/snowyDay.mp4": "/my-weather/static/media/snowyDay.2c44d11288e8e6ea9807.mp4",
+    "static/media/snowyNight.mp4": "/my-weather/static/media/snowyNight.efd82aeabfe8da3126e8.mp4",
+    "static/media/rainyDay.mp4": "/my-weather/static/media/rainyDay.7a606bccc9c56bd21cf0.mp4",
+    "static/media/thunderstormNight.mp4": "/my-weather/static/media/thunderstormNight.eaa6e81923371b56f993.mp4",
+    "static/media/clearNight.mp4": "/my-weather/static/media/clearNight.a6c292f0dc1138d001c7.mp4",
+    "static/media/clearNightPoster.png": "/my-weather/static/media/clearNightPoster.f59a43e50d1e5233eed1.png",
+    "static/media/rainyNight.mp4": "/my-weather/static/media/rainyNight.12be6b0b6e18ab2a2efc.mp4",
+    "static/media/snowyDayPoster.png": "/my-weather/static/media/snowyDayPoster.3be484c023668eca9d4c.png",
+    "static/media/snowyNightPoster.png": "/my-weather/static/media/snowyNightPoster.80854b4d257a54d446c0.png",
+    "static/media/clearDayPoster.png": "/my-weather/static/media/clearDayPoster.2e5e703d92853facbf9a.png",
     "static/media/stormy.svg": "/my-weather/static/media/stormy.1911c79a2f4a8151b365580553479c39.svg",
+    "static/media/rainyDayPoster.png": "/my-weather/static/media/rainyDayPoster.86418549b33751771108.png",
+    "static/media/fontawesome-webfont.svg?v=4.7.0": "/my-weather/static/media/fontawesome-webfont.c1e38fd9e0e74ba58f7a.svg",
+    "static/media/thunderstormNightPoster.png": "/my-weather/static/media/thunderstormNightPoster.3654bf007bbd360af635.png",
     "static/media/lightning.svg": "/my-weather/static/media/lightning.9de080f532fcdc03ed5113568dbbf6c8.svg",
     "static/media/clear.jpg": "/my-weather/static/media/clear.d52f02fb5e5acb0f8e81.jpg",
+    "static/media/fontawesome-webfont.eot": "/my-weather/static/media/fontawesome-webfont.8b43027f47b20503057d.eot",
+    "static/media/fontawesome-webfont.ttf?v=4.7.0": "/my-weather/static/media/fontawesome-webfont.1e59d2330b4c6deb84b3.ttf",
+    "static/media/fontawesome-webfont.woff?v=4.7.0": "/my-weather/static/media/fontawesome-webfont.f691f37e57f04c152e23.woff",
+    "static/media/fontawesome-webfont.woff2?v=4.7.0": "/my-weather/static/media/fontawesome-webfont.20fd1704ea223900efa9.woff2",
     "static/media/thunderstroms-two.svg": "/my-weather/static/media/thunderstroms-two.1c6afac077bec98a66e2808f1aeef45b.svg",
     "static/media/fog.svg": "/my-weather/static/media/fog.8383f058ae5c22f38b3894b78d2a3026.svg",
     "static/media/thunderstroms-sunny.svg": "/my-weather/static/media/thunderstroms-sunny.c1d038e752f3aec4a42b6fece6f1f82d.svg",
@@ -26,11 +45,11 @@
     "static/media/cloudy.svg": "/my-weather/static/media/cloudy.df3bc1da664054b8d74e15a92d983cb1.svg",
     "static/media/night.svg": "/my-weather/static/media/night.8b10a6e4d65b68647c1e20f9fdc2be68.svg",
     "index.html": "/my-weather/index.html",
-    "main.b4e8f775.css.map": "/my-weather/static/css/main.b4e8f775.css.map",
-    "main.fcd5b547.js.map": "/my-weather/static/js/main.fcd5b547.js.map"
+    "main.09dcd7b0.css.map": "/my-weather/static/css/main.09dcd7b0.css.map",
+    "main.99e4ec51.js.map": "/my-weather/static/js/main.99e4ec51.js.map"
   },
   "entrypoints": [
-    "static/css/main.b4e8f775.css",
-    "static/js/main.fcd5b547.js"
+    "static/css/main.09dcd7b0.css",
+    "static/js/main.99e4ec51.js"
   ]
 }
