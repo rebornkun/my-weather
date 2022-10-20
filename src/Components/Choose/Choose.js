@@ -22,7 +22,7 @@ const Choose = ({key,
                 <p className='country'>{country}</p>
                 <div className='corodinates_container'>
                     <div className='corodinates_container_box'>
-                        <p className='Lat'>Latff</p>
+                        <p className='Lat'>Lat</p>
                         <p className='Lon'>Lon</p>
                     </div>
                     <div className='corodinates_container_box'>
